@@ -2,6 +2,8 @@
 
 Contenido para las redes de pymes, creado con IA y publicado solo. Monorepo con pnpm.
 
+**Para retomar el trabajo:** lee [`docs/CHECKLIST.md`](docs/CHECKLIST.md) (estado, cómo probar, hallazgos, pendientes) y [`docs/plan.md`](docs/plan.md) (plan de producto).
+
 ```
 apps/desktop   App de escritorio (Electron + React + TypeScript)
 packages/      Código compartido (Hub, motor de contenido) — se añade en sprints siguientes
