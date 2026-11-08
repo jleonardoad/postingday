@@ -219,9 +219,17 @@ export function stopEngine(): void {
   port = null
 }
 
-/** Parámetros de generación recomendados para Z-Image-Turbo */
+/**
+ * Parámetros de generación para Z-Image-Turbo con stable-diffusion.cpp en Mac.
+ * Medido en un M4 Pro: 1024² ≈ 25 s/paso, 768² ≈ 13 s/paso (+ VAE 8-14 s).
+ * Se usa 768 px y 6 pasos (≈ 1 min por imagen); las plantillas escalan a 1080.
+ * Ajustable con PD_SD_SIZE y PD_SD_STEPS para pruebas.
+ */
 export function engineParams(ratio: OutputKind): { width: number; height: number; steps: number; cfg_scale: number; sampler_name: string } {
+  const size = Number(process.env.PD_SD_SIZE) || 768
+  const steps = Number(process.env.PD_SD_STEPS) || 6
+  const r16 = (n: number): number => Math.round(n / 16) * 16
   return ratio === 'reel'
-    ? { width: 832, height: 1216, steps: 8, cfg_scale: 1.0, sampler_name: 'euler' }
-    : { width: 1024, height: 1024, steps: 8, cfg_scale: 1.0, sampler_name: 'euler' }
+    ? { width: r16(size * 0.85), height: r16(size * 0.85 * (16 / 9)), steps, cfg_scale: 1.0, sampler_name: 'euler' }
+    : { width: size, height: size, steps, cfg_scale: 1.0, sampler_name: 'euler' }
 }

@@ -3,6 +3,8 @@ import type { Business, ImageProviderName, ImageStyle } from '@shared/types'
 
 export interface ImageRequest {
   topic: string
+  /** Descripción visual en inglés (la escribe el proveedor de textos); si falta se usa topic */
+  topicEnglish?: string
   style: ImageStyle
   ratio: OutputKind
   business: Business
@@ -37,7 +39,7 @@ export function buildImagePrompt(req: ImageRequest): string {
         : 'Clean studio product shot on a soft light gray background, centered, soft diffused lighting, gentle shadow.'
   const orientation = req.ratio === 'reel' ? 'Vertical composition with room above and below the product.' : 'Square composition.'
   return [
-    `Professional commercial photograph of: ${req.topic}.`,
+    `Professional commercial photograph of: ${req.topicEnglish || req.topic}.`,
     `It is a product sold by a ${sector}.`,
     style,
     orientation,

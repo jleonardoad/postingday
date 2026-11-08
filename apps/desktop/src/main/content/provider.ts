@@ -21,6 +21,21 @@ export interface GeneratedCopy {
 export interface TextProvider {
   readonly name: ProviderName
   generate(req: GenerateRequest): Promise<GeneratedCopy>
+  /**
+   * Describe el producto en inglés para el generador de imágenes (los modelos de
+   * imagen entienden mejor el inglés; «destornillador de estría» en español los confunde).
+   * Opcional: el proveedor de ejemplo no lo implementa.
+   */
+  describeProduct?(topic: string, business: Business): Promise<string>
+}
+
+export function describeProductPrompt(topic: string, business: Business): string {
+  return [
+    'You help a product photographer. Rewrite the following product or service name as a precise, visual English description for a photo prompt: object type, key visual features, materials and colors (only if given or typical). 8 to 20 words, no brand names, no text, no quotes.',
+    `Product (may be in Spanish): ${topic}`,
+    `Business type: ${business.sector}`,
+    'Reply with the description only.'
+  ].join('\n')
 }
 
 /** Corta por palabra sin pasarse del máximo */

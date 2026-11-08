@@ -2,6 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { AiStatus, ImageInput, ImageProviderName, MediaItem } from '@shared/types'
+import { pickProvider as pickTextProvider } from '../content/generate'
 import { getBusiness } from '../db/business'
 import { updateMedia } from '../db/media'
 import { getSecret, getSettings } from '../db/settings'
@@ -90,7 +91,17 @@ export async function pickImageProvider(): Promise<ImageProvider> {
 export async function generateImage(input: ImageInput, dirs: MediaDirs): Promise<MediaItem> {
   const provider = await pickImageProvider()
   const business = getBusiness()
-  const { bytes, ext } = await provider.generate({ topic: input.topic, style: input.style, ratio: input.ratio, business })
+  let topicEnglish: string | undefined
+  if (provider.name !== 'mock') {
+    try {
+      const text = await pickTextProvider()
+      topicEnglish = (await text.describeProduct?.(input.topic, business))?.trim() || undefined
+      if (topicEnglish) console.log(`[images] «${input.topic}» → "${topicEnglish}"`)
+    } catch (err) {
+      console.warn('[images] sin descripción en inglés:', (err as Error).message)
+    }
+  }
+  const { bytes, ext } = await provider.generate({ topic: input.topic, topicEnglish, style: input.style, ratio: input.ratio, business })
   const tmp = await mkdtemp(join(tmpdir(), 'postingday-img-'))
   try {
     const safe = input.topic.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '').slice(0, 60) || 'imagen'

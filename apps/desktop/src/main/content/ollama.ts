@@ -5,7 +5,8 @@
  */
 import { TEXT_LIMITS } from '@shared/types'
 import { buildSystemPrompt, buildUserPrompt, outputSchema } from './claude'
-import { clampCopy, type GeneratedCopy, type GenerateRequest, type TextProvider } from './provider'
+import type { Business } from '@shared/types'
+import { clampCopy, describeProductPrompt, type GeneratedCopy, type GenerateRequest, type TextProvider } from './provider'
 
 export const OLLAMA_URL = (process.env.OLLAMA_HOST?.startsWith('http') ? process.env.OLLAMA_HOST : 'http://127.0.0.1:11434').replace(/\/$/, '')
 
@@ -67,7 +68,11 @@ export class OllamaProvider implements TextProvider {
   readonly name = 'ollama' as const
   constructor(readonly model: string) {}
 
-  async generate(req: GenerateRequest): Promise<GeneratedCopy> {
+  describeProduct(topic: string, business: Business): Promise<string> {
+    return ollamaDescribeProduct(this.model, topic, business)
+  }
+
+  async generate(req: GenerateRequest, attempt = 1): Promise<GeneratedCopy> {
     const body: Record<string, unknown> = {
       model: this.model,
       stream: false,
@@ -97,14 +102,74 @@ export class OllamaProvider implements TextProvider {
     }
     const data = (await res.json()) as { message?: { content?: string } }
     const content = data.message?.content ?? ''
-    let json: unknown
-    try {
-      json = JSON.parse(content)
-    } catch {
+    const json = extractJson(content)
+    if (json === undefined) {
+      if (attempt < 2) return this.generate(req, attempt + 1)
       throw new Error(`El modelo ${this.model} no devolvió JSON válido. Prueba otro modelo en Ajustes.`)
     }
     const parsed = outputSchema.safeParse(json)
-    if (!parsed.success) throw new Error(`Respuesta del modelo con formato inesperado: ${parsed.error.issues[0]?.message ?? ''}`)
+    if (!parsed.success) {
+      if (attempt < 2) return this.generate(req, attempt + 1)
+      throw new Error(`Respuesta del modelo con formato inesperado: ${parsed.error.issues[0]?.message ?? ''}`)
+    }
     return clampCopy(parsed.data)
   }
+}
+
+export async function ollamaDescribeProduct(model: string, topic: string, business: Business): Promise<string> {
+  const body: Record<string, unknown> = {
+    model,
+    stream: false,
+    messages: [{ role: 'user', content: describeProductPrompt(topic, business) }],
+    options: { temperature: 0.3, num_predict: 80 }
+  }
+  if (THINKING_FAMILIES.test(model)) body.think = false
+  const res = await fetch(`${OLLAMA_URL}/api/chat`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(60_000)
+  })
+  if (!res.ok) throw new Error(`Ollama (${res.status})`)
+  const data = (await res.json()) as { message?: { content?: string } }
+  const text = (data.message?.content ?? '').replace(/<think>[\s\S]*?<\/think>/g, '').replace(/^["'\s]+|["'\s]+$/g, '').split('\n')[0] ?? ''
+  return text.trim()
+}
+
+/**
+ * Los modelos pequeños a veces envuelven el JSON en ```json … ``` o añaden
+ * texto antes/después. Se recupera el primer objeto {…} equilibrado.
+ */
+export function extractJson(text: string): unknown {
+  const clean = text.replace(/```(?:json)?/gi, '').trim()
+  try {
+    return JSON.parse(clean)
+  } catch {
+    /* seguir con la extracción */
+  }
+  const start = clean.indexOf('{')
+  if (start < 0) return undefined
+  let depth = 0
+  let inString = false
+  for (let i = start; i < clean.length; i++) {
+    const c = clean[i]
+    if (inString) {
+      if (c === '\\') i++
+      else if (c === '"') inString = false
+      continue
+    }
+    if (c === '"') inString = true
+    else if (c === '{') depth++
+    else if (c === '}') {
+      depth--
+      if (depth === 0) {
+        try {
+          return JSON.parse(clean.slice(start, i + 1))
+        } catch {
+          return undefined
+        }
+      }
+    }
+  }
+  return undefined
 }

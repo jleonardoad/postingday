@@ -6,8 +6,8 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
 import { z } from 'zod'
-import { TEXT_LIMITS } from '@shared/types'
-import { clampCopy, type GeneratedCopy, type GenerateRequest, type TextProvider } from './provider'
+import { TEXT_LIMITS, type Business } from '@shared/types'
+import { clampCopy, describeProductPrompt, type GeneratedCopy, type GenerateRequest, type TextProvider } from './provider'
 
 export const CLAUDE_MODEL = 'claude-opus-5-5'
 
@@ -109,6 +109,18 @@ export class ClaudeProvider implements TextProvider {
 
   constructor(apiKey: string) {
     this.client = new Anthropic({ apiKey, maxRetries: 2, timeout: 60_000 })
+  }
+
+  async describeProduct(topic: string, business: Business): Promise<string> {
+    const response = await this.client.messages.create({
+      model: CLAUDE_MODEL,
+      max_tokens: 200,
+      output_config: { effort: 'low' },
+      messages: [{ role: 'user', content: describeProductPrompt(topic, business) }]
+    })
+    if (response.stop_reason === 'refusal') return topic
+    const text = response.content.find((b) => b.type === 'text')?.text ?? ''
+    return text.trim().split('\n')[0]?.replace(/^["'\s]+|["'\s]+$/g, '') || topic
   }
 
   async generate(req: GenerateRequest): Promise<GeneratedCopy> {
