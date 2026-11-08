@@ -1,0 +1,356 @@
+{
+  "app": {
+    "name": "PostingDay",
+    "tagline": "Tu negocio, publicado cada día"
+  },
+  "nav": {
+    "home": "Inicio",
+    "profile": "Mi negocio",
+    "library": "Biblioteca",
+    "plan": "Plan mensual",
+    "calendar": "Calendario",
+    "settings": "Ajustes",
+    "soon": "Pronto",
+    "create": "Crear",
+    "pieces": "Publicaciones"
+  },
+  "common": {
+    "save": "Guardar",
+    "saved": "Guardado",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Eliminar este archivo de la biblioteca? Se borra también del disco.",
+    "loading": "Cargando…",
+    "error": "Algo salió mal: {{message}}",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "home": {
+    "greeting": "Hola, {{name}}",
+    "greetingAnon": "Bienvenido a PostingDay",
+    "intro": "Tres pasos para que tu negocio publique solo. Empieza por el primero.",
+    "steps": {
+      "profile": {
+        "title": "Cuéntale a PostingDay quién eres",
+        "desc": "Nombre, rubro, tono y redes. Con esto la IA escribe como tú.",
+        "cta": "Completar mi negocio"
+      },
+      "media": {
+        "title": "Carga fotos y vídeos de tu negocio",
+        "desc": "Al menos 5. Lo real vende más que lo genérico.",
+        "cta": "Ir a la biblioteca"
+      },
+      "plan": {
+        "title": "Crea tu primera publicación",
+        "desc": "Elige un formato, mira la vista previa y deja que PostingDay haga el resto.",
+        "cta": "Ir a Crear"
+      }
+    },
+    "done": "Listo",
+    "pending": "Pendiente",
+    "mediaCount": "{{count}} archivos en la biblioteca",
+    "roadmapTitle": "Qué viene después",
+    "roadmap": [
+      "Sprint 2 · Plan mensual, ideas con gancho, textos y posts con imagen",
+      "Sprint 3 · Reels con tus fotos y clips: plantillas, música, voz y subtítulos",
+      "Sprint 4 · Publicación programada en Instagram, Facebook, TikTok y YouTube"
+    ]
+  },
+  "profile": {
+    "title": "Mi negocio",
+    "subtitle": "Lo que escribas aquí lo usa la IA en cada publicación. Sé concreto.",
+    "sections": {
+      "basics": "Lo básico",
+      "voice": "Cómo hablas",
+      "offer": "Qué vendes",
+      "contact": "Contacto y redes",
+      "brand": "Marca"
+    },
+    "fields": {
+      "name": "Nombre del negocio",
+      "sector": "Rubro",
+      "city": "Ciudad",
+      "description": "Qué haces y para quién",
+      "descriptionHint": "Ej.: Ferretería de barrio con 20 años. Vendemos herramientas, pintura y plomería a dueños de casa y maestros de obra.",
+      "audience": "Tu cliente ideal",
+      "audienceHint": "Ej.: Hombres y mujeres de 30 a 60 que arreglan su casa el fin de semana.",
+      "tone": "Tono",
+      "language": "Idioma del contenido",
+      "starProducts": "Productos o servicios estrella (uno por línea)",
+      "neverSay": "Qué nunca decir",
+      "neverSayHint": "Ej.: no prometer envíos gratis, no hablar de la competencia.",
+      "networks": "Redes donde publicas",
+      "phone": "Teléfono / WhatsApp",
+      "address": "Dirección",
+      "hours": "Horario",
+      "primaryColor": "Color principal",
+      "secondaryColor": "Color secundario"
+    },
+    "sectors": {
+      "food": "Restaurante / comida",
+      "retail": "Tienda / comercio",
+      "hardware": "Ferretería",
+      "fashion": "Zapatería / ropa",
+      "electronics": "Electrodomésticos / tecnología",
+      "health": "Salud / clínica",
+      "beauty": "Belleza / barbería",
+      "services": "Servicios / taller",
+      "other": "Otro"
+    },
+    "tones": {
+      "close": "Cercano",
+      "professional": "Profesional",
+      "fun": "Divertido",
+      "direct": "Directo"
+    },
+    "languages": {
+      "es": "Español",
+      "en": "Inglés",
+      "both": "Ambos"
+    },
+    "networks": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "google_business": "Google Business Profile",
+      "linkedin": "LinkedIn",
+      "x": "X"
+    },
+    "lastSaved": "Última actualización: {{date}}"
+  },
+  "library": {
+    "title": "Biblioteca",
+    "subtitle": "Fotos y vídeos reales de tu negocio. De aquí salen los posts y los reels.",
+    "import": "Importar fotos o vídeos",
+    "importing": "Importando…",
+    "empty": "Todavía no hay nada. Importa fotos de tu local, tus productos o tu equipo.",
+    "filters": {
+      "all": "Todo",
+      "image": "Fotos",
+      "video": "Vídeos"
+    },
+    "count": "{{count}} archivos",
+    "details": "Detalles",
+    "note": "Nota",
+    "noteHint": "Ej.: sartén cerámica, foto del mostrador, llegó en octubre",
+    "tags": "Etiquetas (separadas por coma)",
+    "size": "Tamaño",
+    "dimensions": "Dimensiones",
+    "duration": "Duración",
+    "added": "Añadido",
+    "noThumb": "Sin vista previa",
+    "ffmpegMissing": "No se encontró FFmpeg: las vistas previas y los datos de vídeo no se generarán."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma de la aplicación",
+    "paths": "Dónde guarda PostingDay tus datos",
+    "openMedia": "Abrir carpeta de medios",
+    "version": "Versión {{version}}",
+    "tools": "Herramientas detectadas",
+    "notFound": "no encontrado",
+    "openExports": "Abrir carpeta de exportaciones",
+    "ai": {
+      "title": "Inteligencia artificial",
+      "statusMock": "Sin clave: la app usa textos de ejemplo para que puedas probar todo.",
+      "statusClaude": "Conectado a Claude ({{model}}). Clave tomada de {{source}}.",
+      "sourceEnv": "la variable de entorno",
+      "sourceSettings": "los ajustes",
+      "keyLabel": "Clave de API de Anthropic",
+      "keyHint": "Se guarda solo en este ordenador. Consíguela en console.anthropic.com (no la incluye la suscripción de Claude).",
+      "save": "Guardar clave",
+      "remove": "Quitar clave",
+      "saved": "Clave guardada. La próxima generación usará la IA."
+    }
+  },
+  "create": {
+    "title": "¿Qué quieres publicar?",
+    "subtitle": "Elige un formato. Las vistas previas ya usan tus colores, tu nombre y tus fotos.",
+    "how": {
+      "title": "Así funciona",
+      "step1": "Eliges el formato (producto, oferta, consejo…).",
+      "step2": "PostingDay escribe el texto y arma la imagen o el reel.",
+      "step3": "Lo ves, lo apruebas con un clic y se publica."
+    },
+    "noPhotos": "Sin fotos en la biblioteca las vistas previas usan un fondo de tu color. Importa fotos para verlas con tu negocio.",
+    "needs": {
+      "label": "Necesitas:",
+      "photos_one": "{{count}} foto",
+      "photos_other": "{{count}} fotos",
+      "clips_one": "{{count}} clip",
+      "clips_other": "{{count}} clips"
+    },
+    "outputs": {
+      "reel": "Reel",
+      "post": "Post"
+    },
+    "defaults": {
+      "product": "Tu producto estrella",
+      "business": "Tu negocio",
+      "city": "tu ciudad",
+      "cta": "Escríbenos"
+    },
+    "back": "Todos los formatos",
+    "detail": {
+      "needsTitle": "Qué hace falta",
+      "step1": "Elige la foto o fotos de abajo (o graba lo que te pedimos).",
+      "step2": "PostingDay escribe el texto con tu tono y arma el diseño.",
+      "step3": "Revisas la vista previa, cambias lo que quieras y apruebas.",
+      "choosePhotos_one": "Elige {{count}} foto",
+      "choosePhotos_other": "Elige {{count}} fotos",
+      "generate": "Generar",
+      "preview": "Vista previa",
+      "previewNote": "Ejemplo con tus datos. El texto definitivo lo escribe la IA.",
+      "generating": "Generando…",
+      "aiMock": "Modo prueba: los textos son de ejemplo. Añade tu clave de Anthropic en Ajustes para que los escriba la IA.",
+      "aiClaude": "Los textos los escribe Claude ({{model}})."
+    }
+  },
+  "formats": {
+    "star_product": {
+      "name": "Producto estrella",
+      "desc": "Muestra un producto y por qué lo compran.",
+      "long": "La pieza que más vende: una foto buena, un beneficio claro y una llamada a la acción. Ideal para publicar cada semana con un producto distinto.",
+      "sample": {
+        "kicker": "Producto de la semana",
+        "headline": "{{product}}",
+        "sub": "El favorito de nuestros clientes en {{city}}",
+        "cta": "Escríbenos"
+      }
+    },
+    "weekly_offer": {
+      "name": "Oferta de la semana",
+      "desc": "Una promoción con fecha límite.",
+      "long": "Precio, condición y hasta cuándo. Las ofertas con fecha límite generan más visitas que las abiertas.",
+      "sample": {
+        "kicker": "Solo esta semana",
+        "headline": "Oferta especial",
+        "sub": "{{product}} · hasta el domingo",
+        "cta": "Pregunta aquí",
+        "badge": "¡Últimos días!"
+      }
+    },
+    "new_arrival": {
+      "name": "Llegó nuevo",
+      "desc": "Anuncia lo que acaba de llegar.",
+      "long": "Lo nuevo da motivo para volver. Una foto del producto recién llegado y una frase que invite a pasar.",
+      "sample": {
+        "kicker": "Recién llegado",
+        "headline": "Ya está aquí",
+        "sub": "{{product}} · pásate por {{business}}",
+        "cta": "Ven a verlo"
+      }
+    },
+    "before_after": {
+      "name": "Antes y después",
+      "desc": "El cambio que logras, en dos fotos.",
+      "long": "Funciona para arreglos, reformas, limpiezas, cortes de pelo y todo lo que se vea. Dos fotos tomadas desde el mismo ángulo.",
+      "sample": {
+        "kicker": "",
+        "headline": "Así quedó",
+        "sub": "Trabajo hecho por {{business}}",
+        "cta": "Pide tu presupuesto",
+        "labelA": "Antes",
+        "labelB": "Después"
+      }
+    },
+    "how_to": {
+      "name": "Cómo se usa",
+      "desc": "Un consejo rápido del experto.",
+      "long": "El dueño graba tres clips cortos con el celular siguiendo nuestra lista de tomas; PostingDay los une, pone la voz y los subtítulos.",
+      "sample": {
+        "kicker": "Consejo del experto",
+        "headline": "3 errores al usar {{product}}",
+        "sub": "Y cómo evitarlos en 20 segundos",
+        "cta": "Más consejos",
+        "badge": "Mira hasta el final"
+      }
+    },
+    "faq": {
+      "name": "Pregunta frecuente",
+      "desc": "Responde lo que siempre te preguntan.",
+      "long": "«¿Hacen envíos?», «¿Abren los domingos?». Cada pregunta que te hacen en el mostrador es una publicación.",
+      "sample": {
+        "kicker": "Nos preguntan mucho",
+        "headline": "¿Hacen envíos a domicilio?",
+        "sub": "Sí: pedidos antes de las 2 p. m. llegan el mismo día",
+        "cta": "Pregúntanos",
+        "badge": "Respuesta rápida"
+      }
+    },
+    "behind_scenes": {
+      "name": "Detrás de cámaras",
+      "desc": "Tu equipo y cómo trabajas.",
+      "long": "La gente le compra a gente. Dos clips de cómo preparas, ordenas o atiendes, y una frase sincera.",
+      "sample": {
+        "kicker": "Así trabajamos",
+        "headline": "Un día en {{business}}",
+        "sub": "Lo que no se ve desde el mostrador",
+        "cta": "Síguenos",
+        "badge": "Sin filtros"
+      }
+    },
+    "testimonial": {
+      "name": "Testimonio",
+      "desc": "Lo que dice un cliente contento.",
+      "long": "Una frase real de un cliente (con su permiso) y su foto o la del producto. La prueba social más barata que existe.",
+      "sample": {
+        "kicker": "Cliente de {{business}}",
+        "headline": "“Me atendieron rapidísimo y el producto llegó perfecto.”",
+        "sub": "María G.",
+        "cta": "Opiniones"
+      }
+    }
+  },
+  "pieces": {
+    "title": "Publicaciones",
+    "subtitle": "Todo lo que has generado: borradores y aprobadas.",
+    "new": "Crear otra",
+    "empty": "Todavía no has generado nada. Ve a Crear, elige un formato y pulsa Generar.",
+    "status": {
+      "draft": "Borrador",
+      "approved": "Aprobada"
+    },
+    "provider": {
+      "mock": "Ejemplo",
+      "claude": "IA"
+    },
+    "open": "Abrir",
+    "confirmDelete": "¿Eliminar esta publicación? No se puede deshacer."
+  },
+  "piece": {
+    "back": "Publicaciones",
+    "notFound": "Esa publicación ya no existe.",
+    "sections": {
+      "design": "Textos del diseño",
+      "caption": "Texto de la publicación"
+    },
+    "fields": {
+      "kicker": "Etiqueta superior",
+      "headline": "Titular",
+      "sub": "Subtítulo",
+      "cta": "Botón",
+      "badge": "Sello",
+      "labelA": "Etiqueta «antes»",
+      "labelB": "Etiqueta «después»",
+      "caption": "Texto que acompaña al post",
+      "hashtags": "Hashtags"
+    },
+    "captionHint": "Cámbialo como quieras: cuando apruebes, se publica tal cual.",
+    "hashtagsHint": "Separados por espacios o comas.",
+    "regenerate": "Volver a generar",
+    "regenerating": "Generando…",
+    "approve": "Aprobar",
+    "unapprove": "Volver a borrador",
+    "approvedNote": "Aprobada. En el sprint 4 podrás programarla y se publicará sola.",
+    "export": "Descargar imagen (PNG)",
+    "exporting": "Exportando…",
+    "exported": "Imagen guardada:",
+    "reveal": "Mostrar en Finder",
+    "preview": "Vista previa",
+    "updated": "Actualizada: {{date}}",
+    "mockNote": "Textos de ejemplo (sin IA). Edítalos a mano o añade tu clave en Ajustes.",
+    "claudeNote": "Textos escritos por la IA con el tono de tu negocio. Edita lo que quieras."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "postingday",
+  "private": true,
+  "version": "0.1.0",
+  "description": "PostingDay — contenido para redes de pymes, creado con IA y publicado solo",
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "onlyBuiltDependencies": ["electron"]
+  },
+  "scripts": {
+    "dev": "pnpm --filter @postingday/desktop dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint"
+  }
+}

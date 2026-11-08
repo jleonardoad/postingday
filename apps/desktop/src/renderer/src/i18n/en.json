@@ -1,0 +1,356 @@
+{
+  "app": {
+    "name": "PostingDay",
+    "tagline": "Your business, posted every day"
+  },
+  "nav": {
+    "home": "Home",
+    "profile": "My business",
+    "library": "Library",
+    "plan": "Monthly plan",
+    "calendar": "Calendar",
+    "settings": "Settings",
+    "soon": "Soon",
+    "create": "Create",
+    "pieces": "Posts"
+  },
+  "common": {
+    "save": "Save",
+    "saved": "Saved",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirmDelete": "Remove this file from the library? It will also be deleted from disk.",
+    "loading": "Loading…",
+    "error": "Something went wrong: {{message}}",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "home": {
+    "greeting": "Hi, {{name}}",
+    "greetingAnon": "Welcome to PostingDay",
+    "intro": "Three steps to get your business posting on its own. Start with the first one.",
+    "steps": {
+      "profile": {
+        "title": "Tell PostingDay who you are",
+        "desc": "Name, industry, tone and networks. This is how the AI writes like you.",
+        "cta": "Complete my business"
+      },
+      "media": {
+        "title": "Upload photos and videos of your business",
+        "desc": "At least 5. Real beats generic.",
+        "cta": "Go to library"
+      },
+      "plan": {
+        "title": "Create your first post",
+        "desc": "Pick a format, check the preview and let PostingDay do the rest.",
+        "cta": "Go to Create"
+      }
+    },
+    "done": "Done",
+    "pending": "Pending",
+    "mediaCount": "{{count}} files in the library",
+    "roadmapTitle": "What's next",
+    "roadmap": [
+      "Sprint 2 · Monthly plan, hook ideas, captions and image posts",
+      "Sprint 3 · Reels from your photos and clips: templates, music, voice and captions",
+      "Sprint 4 · Scheduled publishing to Instagram, Facebook, TikTok and YouTube"
+    ]
+  },
+  "profile": {
+    "title": "My business",
+    "subtitle": "Everything you write here feeds every post the AI writes. Be specific.",
+    "sections": {
+      "basics": "Basics",
+      "voice": "How you talk",
+      "offer": "What you sell",
+      "contact": "Contact and networks",
+      "brand": "Brand"
+    },
+    "fields": {
+      "name": "Business name",
+      "sector": "Industry",
+      "city": "City",
+      "description": "What you do and for whom",
+      "descriptionHint": "E.g.: Neighborhood hardware store, 20 years in business. Tools, paint and plumbing for homeowners and contractors.",
+      "audience": "Your ideal customer",
+      "audienceHint": "E.g.: Men and women 30–60 who fix up their house on weekends.",
+      "tone": "Tone",
+      "language": "Content language",
+      "starProducts": "Star products or services (one per line)",
+      "neverSay": "Things to never say",
+      "neverSayHint": "E.g.: never promise free shipping, never mention competitors.",
+      "networks": "Networks you post on",
+      "phone": "Phone / WhatsApp",
+      "address": "Address",
+      "hours": "Opening hours",
+      "primaryColor": "Primary color",
+      "secondaryColor": "Secondary color"
+    },
+    "sectors": {
+      "food": "Restaurant / food",
+      "retail": "Shop / retail",
+      "hardware": "Hardware store",
+      "fashion": "Shoes / clothing",
+      "electronics": "Appliances / electronics",
+      "health": "Health / clinic",
+      "beauty": "Beauty / barbershop",
+      "services": "Services / workshop",
+      "other": "Other"
+    },
+    "tones": {
+      "close": "Friendly",
+      "professional": "Professional",
+      "fun": "Fun",
+      "direct": "Direct"
+    },
+    "languages": {
+      "es": "Spanish",
+      "en": "English",
+      "both": "Both"
+    },
+    "networks": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "google_business": "Google Business Profile",
+      "linkedin": "LinkedIn",
+      "x": "X"
+    },
+    "lastSaved": "Last updated: {{date}}"
+  },
+  "library": {
+    "title": "Library",
+    "subtitle": "Real photos and videos of your business. Posts and reels are built from these.",
+    "import": "Import photos or videos",
+    "importing": "Importing…",
+    "empty": "Nothing here yet. Import photos of your store, your products or your team.",
+    "filters": {
+      "all": "All",
+      "image": "Photos",
+      "video": "Videos"
+    },
+    "count": "{{count}} files",
+    "details": "Details",
+    "note": "Note",
+    "noteHint": "E.g.: ceramic pan, counter photo, arrived in October",
+    "tags": "Tags (comma separated)",
+    "size": "Size",
+    "dimensions": "Dimensions",
+    "duration": "Duration",
+    "added": "Added",
+    "noThumb": "No preview",
+    "ffmpegMissing": "FFmpeg was not found: previews and video details won't be generated."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "App language",
+    "paths": "Where PostingDay stores your data",
+    "openMedia": "Open media folder",
+    "version": "Version {{version}}",
+    "tools": "Detected tools",
+    "notFound": "not found",
+    "openExports": "Open exports folder",
+    "ai": {
+      "title": "Artificial intelligence",
+      "statusMock": "No key: the app uses example texts so you can try everything.",
+      "statusClaude": "Connected to Claude ({{model}}). Key from {{source}}.",
+      "sourceEnv": "the environment variable",
+      "sourceSettings": "settings",
+      "keyLabel": "Anthropic API key",
+      "keyHint": "Stored only on this computer. Get it at console.anthropic.com (not included in the Claude subscription).",
+      "save": "Save key",
+      "remove": "Remove key",
+      "saved": "Key saved. The next generation will use the AI."
+    }
+  },
+  "create": {
+    "title": "What do you want to post?",
+    "subtitle": "Pick a format. Previews already use your colors, your name and your photos.",
+    "how": {
+      "title": "How it works",
+      "step1": "You pick the format (product, offer, tip…).",
+      "step2": "PostingDay writes the text and builds the image or reel.",
+      "step3": "You check it, approve with one click, and it gets published."
+    },
+    "noPhotos": "Without photos in the library, previews use a background in your color. Import photos to see them with your business.",
+    "needs": {
+      "label": "You need:",
+      "photos_one": "{{count}} photo",
+      "photos_other": "{{count}} photos",
+      "clips_one": "{{count}} clip",
+      "clips_other": "{{count}} clips"
+    },
+    "outputs": {
+      "reel": "Reel",
+      "post": "Post"
+    },
+    "defaults": {
+      "product": "Your star product",
+      "business": "Your business",
+      "city": "your city",
+      "cta": "Message us"
+    },
+    "back": "All formats",
+    "detail": {
+      "needsTitle": "What you need",
+      "step1": "Pick the photo(s) below (or record what we ask for).",
+      "step2": "PostingDay writes the text in your tone and builds the design.",
+      "step3": "Check the preview, tweak anything, approve.",
+      "choosePhotos_one": "Pick {{count}} photo",
+      "choosePhotos_other": "Pick {{count}} photos",
+      "generate": "Generate",
+      "preview": "Preview",
+      "previewNote": "Example with your data. The final text is written by the AI.",
+      "generating": "Generating…",
+      "aiMock": "Trial mode: texts are examples. Add your Anthropic key in Settings so the AI writes them.",
+      "aiClaude": "Texts are written by Claude ({{model}})."
+    }
+  },
+  "formats": {
+    "star_product": {
+      "name": "Star product",
+      "desc": "Show one product and why people buy it.",
+      "long": "The piece that sells most: a good photo, one clear benefit and a call to action. Perfect for a different product every week.",
+      "sample": {
+        "kicker": "Product of the week",
+        "headline": "{{product}}",
+        "sub": "Our customers' favorite in {{city}}",
+        "cta": "Message us"
+      }
+    },
+    "weekly_offer": {
+      "name": "Weekly offer",
+      "desc": "A promotion with a deadline.",
+      "long": "Price, condition and until when. Offers with a deadline bring more visits than open-ended ones.",
+      "sample": {
+        "kicker": "This week only",
+        "headline": "Special offer",
+        "sub": "{{product}} · until Sunday",
+        "cta": "Ask here",
+        "badge": "Last days!"
+      }
+    },
+    "new_arrival": {
+      "name": "Just arrived",
+      "desc": "Announce what just came in.",
+      "long": "New stock is a reason to come back. One photo of the new product and a line that invites people in.",
+      "sample": {
+        "kicker": "Just arrived",
+        "headline": "It's here",
+        "sub": "{{product}} · stop by {{business}}",
+        "cta": "Come see it"
+      }
+    },
+    "before_after": {
+      "name": "Before and after",
+      "desc": "The change you deliver, in two photos.",
+      "long": "Works for repairs, renovations, cleaning, haircuts and anything visible. Two photos from the same angle.",
+      "sample": {
+        "kicker": "",
+        "headline": "Done",
+        "sub": "Work by {{business}}",
+        "cta": "Get a quote",
+        "labelA": "Before",
+        "labelB": "After"
+      }
+    },
+    "how_to": {
+      "name": "How to use it",
+      "desc": "A quick tip from the expert.",
+      "long": "The owner records three short clips with the phone following our shot list; PostingDay joins them and adds voice and captions.",
+      "sample": {
+        "kicker": "Expert tip",
+        "headline": "3 mistakes with {{product}}",
+        "sub": "And how to avoid them in 20 seconds",
+        "cta": "More tips",
+        "badge": "Watch till the end"
+      }
+    },
+    "faq": {
+      "name": "Frequent question",
+      "desc": "Answer what people always ask.",
+      "long": "“Do you deliver?”, “Open on Sundays?”. Every question you get at the counter is a post.",
+      "sample": {
+        "kicker": "People ask us",
+        "headline": "Do you deliver?",
+        "sub": "Yes: orders before 2 pm arrive the same day",
+        "cta": "Ask us",
+        "badge": "Quick answer"
+      }
+    },
+    "behind_scenes": {
+      "name": "Behind the scenes",
+      "desc": "Your team and how you work.",
+      "long": "People buy from people. Two clips of how you prepare, organize or serve, and one honest line.",
+      "sample": {
+        "kicker": "How we work",
+        "headline": "A day at {{business}}",
+        "sub": "What you don't see from the counter",
+        "cta": "Follow us",
+        "badge": "No filters"
+      }
+    },
+    "testimonial": {
+      "name": "Testimonial",
+      "desc": "What a happy customer says.",
+      "long": "A real customer quote (with permission) and their photo or the product's. The cheapest social proof there is.",
+      "sample": {
+        "kicker": "{{business}} customer",
+        "headline": "“Super fast service and the product arrived perfect.”",
+        "sub": "Maria G.",
+        "cta": "Reviews"
+      }
+    }
+  },
+  "pieces": {
+    "title": "Posts",
+    "subtitle": "Everything you have generated: drafts and approved.",
+    "new": "Create another",
+    "empty": "Nothing generated yet. Go to Create, pick a format and press Generate.",
+    "status": {
+      "draft": "Draft",
+      "approved": "Approved"
+    },
+    "provider": {
+      "mock": "Example",
+      "claude": "AI"
+    },
+    "open": "Open",
+    "confirmDelete": "Delete this post? This cannot be undone."
+  },
+  "piece": {
+    "back": "Posts",
+    "notFound": "That post no longer exists.",
+    "sections": {
+      "design": "Design texts",
+      "caption": "Post text"
+    },
+    "fields": {
+      "kicker": "Top label",
+      "headline": "Headline",
+      "sub": "Subtitle",
+      "cta": "Button",
+      "badge": "Sticker",
+      "labelA": "“Before” label",
+      "labelB": "“After” label",
+      "caption": "Caption",
+      "hashtags": "Hashtags"
+    },
+    "captionHint": "Change anything you like: once approved, it is published as is.",
+    "hashtagsHint": "Separated by spaces or commas.",
+    "regenerate": "Generate again",
+    "regenerating": "Generating…",
+    "approve": "Approve",
+    "unapprove": "Back to draft",
+    "approvedNote": "Approved. In sprint 4 you will schedule it and it will publish on its own.",
+    "export": "Download image (PNG)",
+    "exporting": "Exporting…",
+    "exported": "Image saved:",
+    "reveal": "Show in Finder",
+    "preview": "Preview",
+    "updated": "Updated: {{date}}",
+    "mockNote": "Example texts (no AI). Edit them by hand or add your key in Settings.",
+    "claudeNote": "Texts written by the AI in your business tone. Edit anything you like."
+  }
+}
