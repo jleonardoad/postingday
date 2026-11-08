@@ -85,6 +85,8 @@ Datos de prueba cargados: negocio ficticio «Ferretería El Tornillo» (Caracas,
 - **Competencia** (investigación del usuario, §1.1 del plan): Predis.ai (19-40 USD) es el referente; el hueco es «lista de tomas + captura móvil + reel con lo real + aprobación»; precio ancla 19 USD.
 - **Imagen → vídeo**: nube 0,04-0,13 USD/s (Wan, Hailuo, Kling; Veo 3.1 Lite 0,05 USD/s; Runway Gen-4 Turbo 0,05 USD/s). Open source: Wan 2.2 TI2V-5B (Apache-2.0) corre en Mac con el mismo sd.cpp (`-M vid_gen -i imagen.png`) o con mlx-video, pero tarda entre 15 y 40 min por clip; LTX-2 tiene licencia propia. Para el producto: animación real solo como extra de pago o experimental; el Ken Burns gratuito sigue siendo la base.
 
+- **Tamaño (medido el 2026-11-08, macOS arm64; aún no hay instalador)**: código de la app compilado 1,1 MB; runtime Electron 253 MB en disco; dependencias de producción ≈ 40-90 MB en disco. Instalador estimado ≈ 100-130 MB comprimido / ≈ 350 MB instalado; con FFmpeg estático incluido (obligatorio para clientes: hoy se usa el de Homebrew, 52 MB) ≈ 150-200 MB / ≈ 400 MB. Opcionales: motor de imágenes local 98 MB de binarios + 8,8 GB de modelos (Z-Image Q8 6,1 GB, Qwen3-4B 2,3 GB, VAE 0,3 GB; con Z-Image Q4_K bajaría a ≈ 6,2 GB); Ollama 693 MB de app + ≈ 4,9 GB para `qwen3:8b`. Todo local y gratis ≈ 15 GB; con IA en la nube (claves) ≈ 0,4 GB.
+
 ## 6. Pendientes (orden sugerido)
 
 ### A. Cierre del E2E de contenido
@@ -100,7 +102,7 @@ Datos de prueba cargados: negocio ficticio «Ferretería El Tornillo» (Caracas,
 - [ ] Hashtags: limitar a 6-8 y filtrar más variantes raras de modelos pequeños.
 
 ### B. Producto y distribución
-- [ ] Empaquetado: `electron-builder` (DMG/NSIS), auto-update, instalador del motor dentro de la app (ya existe el botón «Instalar motor local (9 GB)» en Ajustes).
+- [ ] Empaquetado: `electron-builder` (DMG/NSIS), auto-update, instalador del motor dentro de la app (ya existe el botón «Instalar motor local (9 GB)» en Ajustes). Incluir FFmpeg/ffprobe estáticos (p. ej. `ffmpeg-static`, +50-80 MB): los clientes no tendrán Homebrew.
 - [ ] Firma: Apple Developer y certificado OV para Windows (requieren LLC, ver plan §7). Para pilotos, instaladores sin firmar con guía.
 - [ ] Windows: el motor local solo está preparado para macOS arm64 (`engine.supported`); añadir binario Windows de sd.cpp (Vulkan/CUDA) cuando toque.
 - [ ] Música con licencia para distribuir (paquete o generación) en lugar de la cama sintética.
