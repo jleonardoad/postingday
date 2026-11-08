@@ -68,19 +68,22 @@ export async function runSelfTest(dirs: MediaDirs, exportsDir: string): Promise<
 
   // Generación con el proveedor activo (mock si no hay clave) y exportación a PNG
   const images = all.filter((m) => m.kind === 'image')
-  const piece = await generatePiece({ formatId: 'weekly_offer', mediaIds: images.slice(0, 1).map((m) => m.id), ratio: 'post' })
-  log('generate ok:', piece.provider, '|', piece.texts.kicker, '|', piece.texts.headline, '|', piece.texts.sub, '|', piece.texts.badge)
-  log('caption:', piece.caption.slice(0, 90) + (piece.caption.length > 90 ? '…' : ''))
-  log('hashtags:', piece.hashtags.join(' '))
-  const approved = updatePiece(piece.id, { status: 'approved' })
-  log('pieces.update ok:', approved.status, '| total piezas:', listPieces().length)
-
   try {
-    const file = await exportPiece(piece.id, 'post', exportsDir)
-    const info = await stat(file)
-    log('export ok:', file, `${Math.round(info.size / 1024)} KB`)
+    const piece = await generatePiece({ formatId: 'weekly_offer', mediaIds: images.slice(0, 1).map((m) => m.id), ratio: 'post' })
+    log('generate ok:', piece.provider, '|', piece.texts.kicker, '|', piece.texts.headline, '|', piece.texts.sub, '|', piece.texts.badge)
+    log('caption:', piece.caption.slice(0, 90) + (piece.caption.length > 90 ? '…' : ''))
+    log('hashtags:', piece.hashtags.join(' '))
+    const approved = updatePiece(piece.id, { status: 'approved' })
+    log('pieces.update ok:', approved.status, '| total piezas:', listPieces().length)
+    try {
+      const file = await exportPiece(piece.id, 'post', exportsDir)
+      const info = await stat(file)
+      log('export ok:', file, `${Math.round(info.size / 1024)} KB`)
+    } catch (err) {
+      log('export ERROR:', (err as Error).message)
+    }
   } catch (err) {
-    log('export ERROR:', (err as Error).message)
+    log('generate ERROR:', (err as Error).message)
   }
 
   if (process.env.PD_SELFTEST_CLAUDE) {

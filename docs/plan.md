@@ -48,6 +48,28 @@
 
 ---
 
+### 1.1 Competencia (investigación del usuario, 2026-11-07)
+
+Ningún producto hace el ciclo completo (perfil → plan mensual → lista de tomas → reel con material propio y marca → aprobación → publicación en cuatro redes) y ninguno es app de escritorio; pero la categoría está llena y dos o tres cubren el 60-80 % de PostingDay más barato.
+
+| Producto | Qué cubre | Precio | Hueco que deja |
+|---|---|---|---|
+| **Predis.ai** (el más cercano) | Kit de marca, posts/carruseles/reels con fotos propias o stock, calendario, autopublica en IG/FB/TikTok/YT Shorts | 19-40 USD/mes según fuente; multi-idioma solo en el tier alto; tope citado de 3 autopublicaciones/día | Sin lista de tomas ni captura móvil |
+| **Pippit** (CapCut/ByteDance) | De una foto o enlace de producto a vídeos con avatar; calendario; publica en TikTok/IG/FB | Gratis con créditos semanales | Pensado para e-commerce, no negocio local |
+| **Blotato** | Escritura, reutilización, vídeo sin rostro (voces ElevenLabs), imágenes, 9 plataformas | 29 / 97 / 499 USD | Para creadores, no dueños con material propio |
+| **Marky** | Posts de marca a partir del sitio web; publica en FB/IG/TikTok/LinkedIn/GBP | — | Solo imagen y texto; quejas por créditos |
+| **Reelful** (iOS, jul. 2026) | De fotos/clips del carrete a vídeo con guion, voz clonada, subtítulos y música | ~25 USD/mes por 10 vídeos | Sin plan mensual ni programación; solo móvil |
+| Programadores (Metricool, Buffer, Publer, Ocoya, Nuelink, Simplified) | Programan lo ya producido; IA de texto limitada | — | No producen |
+| Multi-sede (Birdeye, PromoRepublic, SOCi) | Franquicias | 49-299 USD por sede | No apuntan a una barbería |
+| Meta Edits | Editor gratuito de Instagram con IA; versión de escritorio anunciada jun. 2026 | Gratis | La plataforma avanza hacia este terreno |
+
+**Conclusiones que afectan al plan:**
+
+1. El hueco real es estrecho: **lista de tomas + captura desde el celular + reel con lo real + aprobación, en un solo flujo**. Nadie lo tiene como función central. Es copiable; la ventaja duradera es la distribución en persona y el servicio de arranque.
+2. **Precio de referencia: Predis a 19 USD con autopublicación.** El plan Pro de 59 USD debe venderse como «no tienes que pensar qué grabar» (y el acompañamiento humano), no como «programa posts». Revisar la escalera de precios (sección 6).
+3. **Que nadie sea app de escritorio es una pista, no un hueco:** el dueño graba con el teléfono; todo el mercado es web o móvil. La «puerta de salida a web app» de la sección 2.1 probablemente debería ser la entrada. Decisión pendiente del usuario.
+4. Validación barata: una semana con el material de un piloto real en Predis, Pippit y Reelful. Si con esas tres el dueño publica solo, el producto es otro.
+
 ## 2. Decisiones de arquitectura
 
 ### 2.1 App de escritorio + Hub en la nube (no una app 100 % local)
