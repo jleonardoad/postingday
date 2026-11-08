@@ -37,7 +37,7 @@
       },
       "media": {
         "title": "Carga fotos y vídeos de tu negocio",
-        "desc": "Al menos 5. Desde el ordenador o directamente desde tu celular con un código QR.",
+        "desc": "Al menos 5. Desde el ordenador, desde tu celular con un código QR, o creadas con IA si no tienes fotos.",
         "cta": "Ir a la biblioteca"
       },
       "plan": {
@@ -121,7 +121,7 @@
   },
   "library": {
     "title": "Biblioteca",
-    "subtitle": "Fotos y vídeos reales de tu negocio. De aquí salen los posts y los reels.",
+    "subtitle": "Fotos y vídeos reales de tu negocio, o imágenes creadas con IA. De aquí salen los posts y los reels.",
     "import": "Importar fotos o vídeos",
     "importing": "Importando…",
     "empty": "Todavía no hay nada. Importa fotos de tu local, tus productos o tu equipo.",
@@ -142,7 +142,8 @@
     "noThumb": "Sin vista previa",
     "ffmpegMissing": "No se encontró FFmpeg: las vistas previas y los datos de vídeo no se generarán.",
     "fromPhone": "Subir desde el celular",
-    "aiBadge": "IA"
+    "aiBadge": "IA",
+    "generateImage": "Crear imagen con IA"
   },
   "settings": {
     "title": "Ajustes",
@@ -425,5 +426,14 @@
     "received_one": "{{count}} archivo recibido",
     "received_other": "{{count}} archivos recibidos",
     "firewall": "Si macOS pregunta si PostingDay puede aceptar conexiones entrantes, responde «Permitir». Deja esta ventana abierta mientras envías."
+  },
+  "imageModal": {
+    "title": "Crear imagen con IA",
+    "subtitle": "Para productos o servicios de los que no tienes foto. La imagen se guarda en tu biblioteca.",
+    "topic": "¿Qué quieres mostrar?",
+    "style": "Estilo",
+    "generate": "Crear imagen",
+    "done": "Imagen creada y guardada en la biblioteca.",
+    "wait": "Con el motor local tarda alrededor de un minuto; con OpenAI, unos segundos."
   }
 }

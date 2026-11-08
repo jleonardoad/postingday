@@ -1,9 +1,10 @@
 import type { JSX } from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { Film, ImageIcon, Smartphone, Trash2, Upload } from 'lucide-react'
+import { Film, ImageIcon, Smartphone, Sparkles, Trash2, Upload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { MediaItem, MediaKind } from '@shared/types'
 import { CaptureModal } from '../components/CaptureModal'
+import { GenerateImageModal } from '../components/GenerateImageModal'
 import { useStore } from '../store'
 
 type Filter = 'all' | MediaKind
@@ -19,6 +20,7 @@ export function Library(): JSX.Element {
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [ffmpegMissing, setFfmpegMissing] = useState(false)
   const [captureOpen, setCaptureOpen] = useState(initialArg === 'capture')
+  const [imageOpen, setImageOpen] = useState(initialArg === 'image')
   const countAtOpen = useRef(media.length)
 
   useEffect(() => {
@@ -47,6 +49,10 @@ export function Library(): JSX.Element {
           <p className="mt-1 text-slate-600">{t('library.subtitle')}</p>
         </div>
         <div className="flex shrink-0 gap-2 whitespace-nowrap">
+          <button className="btn-secondary" onClick={() => setImageOpen(true)}>
+            <Sparkles size={16} />
+            {t('library.generateImage')}
+          </button>
           <button className="btn-secondary" onClick={openCapture}>
             <Smartphone size={16} />
             {t('library.fromPhone')}
@@ -58,6 +64,7 @@ export function Library(): JSX.Element {
         </div>
       </div>
 
+      {imageOpen && <GenerateImageModal onClose={() => setImageOpen(false)} />}
       {captureOpen && <CaptureModal onClose={() => setCaptureOpen(false)} received={Math.max(0, media.length - countAtOpen.current)} />}
 
       {ffmpegMissing && (

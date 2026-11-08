@@ -37,7 +37,7 @@
       },
       "media": {
         "title": "Upload photos and videos of your business",
-        "desc": "At least 5. From the computer or straight from your phone with a QR code.",
+        "desc": "At least 5. From the computer, from your phone with a QR code, or AI-made if you have no photos.",
         "cta": "Go to library"
       },
       "plan": {
@@ -121,7 +121,7 @@
   },
   "library": {
     "title": "Library",
-    "subtitle": "Real photos and videos of your business. Posts and reels are built from these.",
+    "subtitle": "Real photos and videos of your business, or AI-made images. Posts and reels are built from these.",
     "import": "Import photos or videos",
     "importing": "Importing…",
     "empty": "Nothing here yet. Import photos of your store, your products or your team.",
@@ -142,7 +142,8 @@
     "noThumb": "No preview",
     "ffmpegMissing": "FFmpeg was not found: previews and video details won't be generated.",
     "fromPhone": "Upload from phone",
-    "aiBadge": "AI"
+    "aiBadge": "AI",
+    "generateImage": "Create image with AI"
   },
   "settings": {
     "title": "Settings",
@@ -425,5 +426,14 @@
     "received_one": "{{count}} file received",
     "received_other": "{{count}} files received",
     "firewall": "If macOS asks whether PostingDay may accept incoming connections, answer “Allow”. Keep this window open while sending."
+  },
+  "imageModal": {
+    "title": "Create image with AI",
+    "subtitle": "For products or services you have no photo of. The image is saved to your library.",
+    "topic": "What do you want to show?",
+    "style": "Style",
+    "generate": "Create image",
+    "done": "Image created and saved to the library.",
+    "wait": "The local engine takes about a minute; OpenAI, a few seconds."
   }
 }
