@@ -22,7 +22,15 @@ const api: Api = {
     list: () => ipcRenderer.invoke(CH.mediaList),
     import: () => ipcRenderer.invoke(CH.mediaImport),
     remove: (id: number) => ipcRenderer.invoke(CH.mediaRemove, id),
-    update: (id: number, patch: MediaPatch) => ipcRenderer.invoke(CH.mediaUpdate, id, patch)
+    update: (id: number, patch: MediaPatch) => ipcRenderer.invoke(CH.mediaUpdate, id, patch),
+    onChanged: (cb: () => void) => {
+      const listener = (): void => cb()
+      ipcRenderer.on(CH.mediaChanged, listener)
+      return () => ipcRenderer.removeListener(CH.mediaChanged, listener)
+    }
+  },
+  capture: {
+    start: () => ipcRenderer.invoke(CH.captureStart)
   },
   content: {
     generate: (input: GenerateInput) => ipcRenderer.invoke(CH.contentGenerate, input)

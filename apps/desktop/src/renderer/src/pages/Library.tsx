@@ -1,8 +1,9 @@
 import type { JSX } from 'react'
-import { useEffect, useState } from 'react'
-import { Film, ImageIcon, Trash2, Upload } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Film, ImageIcon, Smartphone, Trash2, Upload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { MediaItem, MediaKind } from '@shared/types'
+import { CaptureModal } from '../components/CaptureModal'
 import { useStore } from '../store'
 
 type Filter = 'all' | MediaKind
@@ -13,13 +14,21 @@ export function Library(): JSX.Element {
   const importing = useStore((s) => s.importing)
   const importMedia = useStore((s) => s.importMedia)
   const removeMedia = useStore((s) => s.removeMedia)
+  const initialArg = useStore((s) => s.initialFormat)
   const [filter, setFilter] = useState<Filter>('all')
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [ffmpegMissing, setFfmpegMissing] = useState(false)
+  const [captureOpen, setCaptureOpen] = useState(initialArg === 'capture')
+  const countAtOpen = useRef(media.length)
 
   useEffect(() => {
     void window.api.app.paths().then((p) => setFfmpegMissing(!p.ffmpeg))
   }, [])
+
+  function openCapture(): void {
+    countAtOpen.current = media.length
+    setCaptureOpen(true)
+  }
 
   const visible = media.filter((m) => filter === 'all' || m.kind === filter)
   const selected = media.find((m) => m.id === selectedId) ?? null
@@ -37,11 +46,19 @@ export function Library(): JSX.Element {
           <h1 className="text-2xl font-semibold tracking-tight">{t('library.title')}</h1>
           <p className="mt-1 text-slate-600">{t('library.subtitle')}</p>
         </div>
-        <button className="btn-primary" disabled={importing} onClick={() => void importMedia()}>
-          <Upload size={16} />
-          {importing ? t('library.importing') : t('library.import')}
-        </button>
+        <div className="flex shrink-0 gap-2 whitespace-nowrap">
+          <button className="btn-secondary" onClick={openCapture}>
+            <Smartphone size={16} />
+            {t('library.fromPhone')}
+          </button>
+          <button className="btn-primary" disabled={importing} onClick={() => void importMedia()}>
+            <Upload size={16} />
+            {importing ? t('library.importing') : t('library.import')}
+          </button>
+        </div>
       </div>
+
+      {captureOpen && <CaptureModal onClose={() => setCaptureOpen(false)} received={Math.max(0, media.length - countAtOpen.current)} />}
 
       {ffmpegMissing && (
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">

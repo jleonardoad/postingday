@@ -27,6 +27,8 @@ export function App({ initialSettings }: { initialSettings: AppSettings }): JSX.
     void loadMedia()
     void loadPieces()
     void loadAiStatus()
+    // Fotos que llegan desde el teléfono: recargar la biblioteca
+    return window.api.media.onChanged(() => void loadMedia())
   }, [initialSettings, loadBusiness, loadMedia, loadPieces, loadAiStatus])
 
   return (

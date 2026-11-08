@@ -5,9 +5,11 @@
  *   PD_IMPORT_FILES=a.jpg,b.mp4   importa esos archivos como si fueran del diálogo
  *   PD_SELFTEST_CLAUDE=1          prueba también el proveedor Claude (necesita clave)
  */
-import { stat } from 'node:fs/promises'
+import { readFile, stat } from 'node:fs/promises'
+import { extname } from 'node:path'
 import { FORMATS } from '@shared/formats'
 import { emptyBusiness } from '@shared/types'
+import { startCaptureServer } from './capture/server'
 import { ClaudeProvider, describeClaudeError } from './content/claude'
 import { aiStatus, generatePiece } from './content/generate'
 import { getBusiness, saveBusiness } from './db/business'
@@ -84,6 +86,34 @@ export async function runSelfTest(dirs: MediaDirs, exportsDir: string): Promise<
     }
   } catch (err) {
     log('generate ERROR:', (err as Error).message)
+  }
+
+  // Captura desde el teléfono: arranca el servidor local y simula un envío por HTTP
+  try {
+    const captureInfo = await startCaptureServer({
+      dirs,
+      getLang: () => 'es',
+      getBusinessName: () => getBusiness().name || 'PostingDay',
+      onImported: (item) => log('capture: recibido', item.originalName)
+    })
+    log('capture url:', captureInfo.url, '| qr:', captureInfo.qrDataUrl.length, 'bytes')
+    const local = captureInfo.url.replace(/\/\/[^/]+:/, '//127.0.0.1:')
+    const page = await fetch(local)
+    log('capture page:', page.status, (await page.text()).includes('PostingDay') ? 'html ok' : 'HTML INESPERADO')
+    const sample = files[0]
+    if (sample) {
+      const body = await readFile(sample)
+      const up = await fetch(`${local}/upload?name=${encodeURIComponent('desde-el-celular' + extname(sample))}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/octet-stream' },
+        body
+      })
+      log('capture upload:', up.status, await up.text())
+    }
+    const listed = (await (await fetch(`${local}/list`)).json()) as { items: unknown[] }
+    log('capture list:', listed.items.length, 'elementos')
+  } catch (err) {
+    log('capture ERROR:', (err as Error).message)
   }
 
   if (process.env.PD_SELFTEST_CLAUDE) {

@@ -72,6 +72,16 @@ Ningún producto hace el ciclo completo (perfil → plan mensual → lista de to
 
 ## 2. Decisiones de arquitectura
 
+### 2.0 Restricción fijada por el usuario (2026-11-07): sin base de datos de usuarios
+
+PostingDay **no tiene cuentas de usuario ni guarda datos de clientes en servidores propios**. Los datos del negocio (perfil, fotos, borradores) viven en la laptop del cliente. Consecuencias:
+
+- La app de escritorio es el producto; **no hay web app con cuentas**.
+- El teléfono se conecta a la laptop **por la misma Wi-Fi** (código QR → página local → las fotos y clips caen en la biblioteca). Sin nube, sin registro. Implementado en `src/main/capture/`.
+- Cobro: **clave de licencia** emitida por la pasarela de pago (Stripe/Lemon Squeezy guardan los datos del cliente, no PostingDay).
+- IA y publicación: un servicio mínimo que solo conoce claves de licencia (contador de créditos y reenvío a la API de publicación), sin correos ni contraseñas. Alternativa aún más simple para pilotos: el cliente pone su propia clave de API (BYOK).
+- La sección 2.1 describe el Hub original; léase con esta restricción: el Hub nunca almacena identidades, solo licencias.
+
 ### 2.1 App de escritorio + Hub en la nube (no una app 100 % local)
 
 Pediste «descargar e instalar». Se respeta, pero una app totalmente local **no puede** hacer tres de las cosas que vendes:

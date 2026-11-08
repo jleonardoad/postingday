@@ -9,6 +9,7 @@ import {
   settingsSchema,
   type AppPaths
 } from '@shared/types'
+import { startCaptureServer } from './capture/server'
 import { aiStatus, generatePiece, setApiKey } from './content/generate'
 import { getBusiness, saveBusiness } from './db/business'
 import { listMedia, updateMedia } from './db/media'
@@ -82,4 +83,13 @@ export function registerIpc(ctx: IpcContext): void {
 
   ipcMain.handle(CH.aiStatus, () => aiStatus())
   ipcMain.handle(CH.aiSetKey, (_e, key: unknown) => setApiKey(z.string().nullable().parse(key)))
+
+  ipcMain.handle(CH.captureStart, () =>
+    startCaptureServer({
+      dirs: ctx.dirs,
+      getLang: () => getSettings().uiLanguage,
+      getBusinessName: () => getBusiness().name || 'PostingDay',
+      onImported: () => ctx.getWindow()?.webContents.send(CH.mediaChanged)
+    })
+  )
 }

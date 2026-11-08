@@ -34,9 +34,19 @@ export const CH = {
   piecesExport: 'pieces:export',
   aiStatus: 'ai:status',
   aiSetKey: 'ai:setKey',
+  captureStart: 'capture:start',
+  /** Evento main → renderer: la biblioteca cambió (p. ej. llegó una foto desde el teléfono) */
+  mediaChanged: 'media:changed',
   /** Lo envía la ventana oculta de render cuando la plantilla terminó de pintarse */
   renderReady: 'render:ready'
 } as const
+
+export interface CaptureInfo {
+  url: string
+  urls: string[]
+  qrDataUrl: string
+  port: number
+}
 
 /** Contrato que el preload expone al renderer como window.api */
 export interface Api {
@@ -59,6 +69,12 @@ export interface Api {
     import(): Promise<MediaItem[]>
     remove(id: number): Promise<void>
     update(id: number, patch: MediaPatch): Promise<MediaItem>
+    /** Avisa cuando la biblioteca cambia por fuera del renderer; devuelve la función para desuscribirse */
+    onChanged(cb: () => void): () => void
+  }
+  capture: {
+    /** Arranca (o reutiliza) el servidor local y devuelve la URL y el código QR para el teléfono */
+    start(): Promise<CaptureInfo>
   }
   content: {
     generate(input: GenerateInput): Promise<Piece>

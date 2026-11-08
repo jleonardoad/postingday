@@ -37,7 +37,7 @@
       },
       "media": {
         "title": "Upload photos and videos of your business",
-        "desc": "At least 5. Real beats generic.",
+        "desc": "At least 5. From the computer or straight from your phone with a QR code.",
         "cta": "Go to library"
       },
       "plan": {
@@ -140,7 +140,8 @@
     "duration": "Duration",
     "added": "Added",
     "noThumb": "No preview",
-    "ffmpegMissing": "FFmpeg was not found: previews and video details won't be generated."
+    "ffmpegMissing": "FFmpeg was not found: previews and video details won't be generated.",
+    "fromPhone": "Upload from phone"
   },
   "settings": {
     "title": "Settings",
@@ -352,5 +353,17 @@
     "updated": "Updated: {{date}}",
     "mockNote": "Example texts (no AI). Edit them by hand or add your key in Settings.",
     "claudeNote": "Texts written by the AI in your business tone. Edit anything you like."
+  },
+  "capture": {
+    "title": "Upload from phone",
+    "subtitle": "No accounts, no cloud: your phone sends photos to this laptop over Wi-Fi.",
+    "urlLabel": "or type this address in the phone browser",
+    "step1": "Connect the phone to the same Wi-Fi as this laptop.",
+    "step2": "Open the phone camera, point it at the QR code and tap the link.",
+    "step3": "Take photos or record clips. They show up here on their own.",
+    "waiting": "Waiting for photos from the phone…",
+    "received_one": "{{count}} file received",
+    "received_other": "{{count}} files received",
+    "firewall": "If macOS asks whether PostingDay may accept incoming connections, answer “Allow”. Keep this window open while sending."
   }
 }

@@ -37,7 +37,7 @@
       },
       "media": {
         "title": "Carga fotos y vídeos de tu negocio",
-        "desc": "Al menos 5. Lo real vende más que lo genérico.",
+        "desc": "Al menos 5. Desde el ordenador o directamente desde tu celular con un código QR.",
         "cta": "Ir a la biblioteca"
       },
       "plan": {
@@ -140,7 +140,8 @@
     "duration": "Duración",
     "added": "Añadido",
     "noThumb": "Sin vista previa",
-    "ffmpegMissing": "No se encontró FFmpeg: las vistas previas y los datos de vídeo no se generarán."
+    "ffmpegMissing": "No se encontró FFmpeg: las vistas previas y los datos de vídeo no se generarán.",
+    "fromPhone": "Subir desde el celular"
   },
   "settings": {
     "title": "Ajustes",
@@ -352,5 +353,17 @@
     "updated": "Actualizada: {{date}}",
     "mockNote": "Textos de ejemplo (sin IA). Edítalos a mano o añade tu clave en Ajustes.",
     "claudeNote": "Textos escritos por la IA con el tono de tu negocio. Edita lo que quieras."
+  },
+  "capture": {
+    "title": "Subir desde el celular",
+    "subtitle": "Sin cuentas ni nube: tu teléfono le envía las fotos a esta laptop por la Wi-Fi.",
+    "urlLabel": "o escribe esta dirección en el navegador del celular",
+    "step1": "Conecta el celular a la misma Wi-Fi que esta laptop.",
+    "step2": "Abre la cámara del celular y apunta al código QR; toca el enlace que aparece.",
+    "step3": "Toma fotos o graba clips. Aparecen aquí solos.",
+    "waiting": "Esperando fotos del celular…",
+    "received_one": "{{count}} archivo recibido",
+    "received_other": "{{count}} archivos recibidos",
+    "firewall": "Si macOS pregunta si PostingDay puede aceptar conexiones entrantes, responde «Permitir». Deja esta ventana abierta mientras envías."
   }
 }

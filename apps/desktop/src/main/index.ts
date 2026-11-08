@@ -1,7 +1,10 @@
 import { join } from 'node:path'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { app, BrowserWindow, shell } from 'electron'
+import { startCaptureServer } from './capture/server'
 import { closeDb, openDb } from './db'
+import { getBusiness } from './db/business'
+import { getSettings } from './db/settings'
 import { registerIpc } from './ipc'
 import { ensureDirs } from './media/import'
 import { installProtocolHandler, registerSchemePrivileges } from './protocol'
@@ -94,6 +97,24 @@ async function bootstrap(): Promise<void> {
   })
 
   if (process.env.PD_SELFTEST) await runSelfTest(dirs, exportsDir)
+
+  // Captura de la página del teléfono a tamaño de móvil: PD_PHONE_SHOT=/ruta.png
+  const phoneShot = process.env.PD_PHONE_SHOT
+  if (phoneShot) {
+    const info = await startCaptureServer({
+      dirs,
+      getLang: () => getSettings().uiLanguage,
+      getBusinessName: () => getBusiness().name || 'PostingDay',
+      onImported: () => undefined
+    })
+    const phone = new BrowserWindow({ width: 390, height: 844, useContentSize: true, show: false })
+    await phone.loadURL(info.url.replace(/\/\/[^/]+:/, '//127.0.0.1:'))
+    await new Promise((r) => setTimeout(r, 800))
+    const image = await phone.webContents.capturePage()
+    await writeFile(phoneShot, image.toPNG())
+    phone.destroy()
+    console.log(`[postingday] captura del teléfono guardada en ${phoneShot}`)
+  }
 
   mainWindow = createWindow()
 }
