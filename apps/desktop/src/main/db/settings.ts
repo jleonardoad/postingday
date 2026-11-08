@@ -4,7 +4,8 @@ import { settingsSchema, type AppSettings } from '@shared/types'
 
 function defaults(): AppSettings {
   const locale = app.getLocale().toLowerCase()
-  return { uiLanguage: locale.startsWith('es') ? 'es' : 'en' }
+  // El esquema rellena el resto de valores por defecto (proveedores, modelo, URL local)
+  return settingsSchema.parse({ uiLanguage: locale.startsWith('es') ? 'es' : 'en' })
 }
 
 export function getSettings(): AppSettings {

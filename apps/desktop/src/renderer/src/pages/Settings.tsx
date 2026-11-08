@@ -1,23 +1,57 @@
 import { useEffect, useState, type JSX } from 'react'
 import { FolderOpen, KeyRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { UI_LANGUAGES, type AppPaths, type KeyName, type UiLanguage } from '@shared/types'
+import {
+  IMAGE_PROVIDER_MODES,
+  TEXT_PROVIDER_MODES,
+  UI_LANGUAGES,
+  type AppPaths,
+  type AppSettings,
+  type KeyName,
+  type UiLanguage
+} from '@shared/types'
 import { useStore } from '../store'
 
 export function Settings(): JSX.Element {
   const { t } = useTranslation()
   const settings = useStore((s) => s.settings)
   const updateSettings = useStore((s) => s.updateSettings)
+  const loadAiStatus = useStore((s) => s.loadAiStatus)
   const aiStatus = useStore((s) => s.aiStatus)
   const [paths, setPaths] = useState<AppPaths | null>(null)
   const [version, setVersion] = useState('')
+  const [localUrl, setLocalUrl] = useState(settings.localImageUrl)
 
   useEffect(() => {
     void window.api.app.paths().then(setPaths)
     void window.api.app.version().then(setVersion)
-  }, [])
+    void loadAiStatus()
+  }, [loadAiStatus])
+
+  useEffect(() => setLocalUrl(settings.localImageUrl), [settings.localImageUrl])
+
+  async function change(patch: Partial<AppSettings>): Promise<void> {
+    await updateSettings(patch)
+    await loadAiStatus()
+  }
 
   const source = (s: 'env' | 'settings' | null): string => (s === 'env' ? t('settings.ai.sourceEnv') : t('settings.ai.sourceSettings'))
+
+  const textStatus = !aiStatus
+    ? t('common.loading')
+    : aiStatus.provider === 'claude'
+      ? t('settings.ai.statusClaude', { model: aiStatus.model, source: source(aiStatus.keySource) })
+      : aiStatus.provider === 'ollama'
+        ? t('settings.ai.statusOllama', { model: aiStatus.model })
+        : t('settings.ai.statusMock')
+
+  const imageStatus = !aiStatus
+    ? t('common.loading')
+    : aiStatus.images.provider === 'openai'
+      ? t('settings.ai.imageStatusOn', { model: aiStatus.images.model, source: source(aiStatus.images.keySource) })
+      : aiStatus.images.provider === 'local'
+        ? t('settings.ai.imageStatusLocal', { url: aiStatus.images.local.url })
+        : t('settings.ai.imageStatusMock')
 
   return (
     <div>
@@ -25,11 +59,7 @@ export function Settings(): JSX.Element {
 
       <section className="card mt-6">
         <label className="field-label">{t('settings.language')}</label>
-        <select
-          className="field-input max-w-xs"
-          value={settings.uiLanguage}
-          onChange={(e) => void updateSettings({ uiLanguage: e.target.value as UiLanguage })}
-        >
+        <select className="field-input max-w-xs" value={settings.uiLanguage} onChange={(e) => void change({ uiLanguage: e.target.value as UiLanguage })}>
           {UI_LANGUAGES.map((l) => (
             <option key={l} value={l}>
               {l === 'es' ? 'Español' : 'English'}
@@ -38,33 +68,100 @@ export function Settings(): JSX.Element {
         </select>
       </section>
 
-      <section className="card mt-4 space-y-6">
-        <h2 className="text-sm font-medium tracking-wide text-slate-400 uppercase">{t('settings.ai.title')}</h2>
+      {/* ---------- Textos ---------- */}
+      <section className="card mt-4 space-y-5">
+        <h2 className="text-sm font-medium tracking-wide text-slate-400 uppercase">
+          {t('settings.ai.title')} · {t('settings.ai.textTitle')}
+        </h2>
+        <p className="text-sm text-slate-700">{textStatus}</p>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="field-label">{t('settings.ai.mode')}</label>
+            <select className="field-input" value={settings.textProvider} onChange={(e) => void change({ textProvider: e.target.value as AppSettings['textProvider'] })}>
+              {TEXT_PROVIDER_MODES.map((m) => (
+                <option key={m} value={m}>
+                  {t(`settings.ai.modes.${m}`)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="field-label">{t('settings.ai.ollamaModel')}</label>
+            <select
+              className="field-input"
+              value={settings.ollamaModel}
+              disabled={!aiStatus?.ollama.models.length}
+              onChange={(e) => void change({ ollamaModel: e.target.value })}
+            >
+              <option value="">{t('settings.ai.ollamaAuto')}</option>
+              {aiStatus?.ollama.models.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+            <div className="field-hint">
+              {!aiStatus
+                ? ''
+                : aiStatus.ollama.models.length
+                  ? t('settings.ai.ollamaReady', { count: aiStatus.ollama.models.length })
+                  : aiStatus.ollama.available
+                    ? t('settings.ai.ollamaNone')
+                    : t('settings.ai.ollamaNone') + ' · ' + t('settings.ai.ollamaOff')}
+            </div>
+          </div>
+        </div>
 
         <KeyField
           name="anthropic"
           label={t('settings.ai.keyLabel')}
           hint={t('settings.ai.keyHint')}
           placeholder="sk-ant-…"
-          status={
-            aiStatus?.provider === 'claude'
-              ? t('settings.ai.statusClaude', { model: aiStatus.model, source: source(aiStatus.keySource) })
-              : t('settings.ai.statusMock')
-          }
           canRemove={aiStatus?.keySource === 'settings'}
+          onSaved={loadAiStatus}
         />
+      </section>
+
+      {/* ---------- Imágenes ---------- */}
+      <section className="card mt-4 space-y-5">
+        <h2 className="text-sm font-medium tracking-wide text-slate-400 uppercase">
+          {t('settings.ai.title')} · {t('settings.ai.imageTitle')}
+        </h2>
+        <p className="text-sm text-slate-700">{imageStatus}</p>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="field-label">{t('settings.ai.imageMode')}</label>
+            <select className="field-input" value={settings.imageProvider} onChange={(e) => void change({ imageProvider: e.target.value as AppSettings['imageProvider'] })}>
+              {IMAGE_PROVIDER_MODES.map((m) => (
+                <option key={m} value={m}>
+                  {t(`settings.ai.imageModes.${m}`)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="field-label">{t('settings.ai.localUrl')}</label>
+            <input
+              className="field-input font-mono"
+              value={localUrl}
+              onChange={(e) => setLocalUrl(e.target.value)}
+              onBlur={() => {
+                if (localUrl !== settings.localImageUrl) void change({ localImageUrl: localUrl.trim() || 'http://127.0.0.1:7860' })
+              }}
+            />
+            <div className="field-hint">{aiStatus ? (aiStatus.images.local.available ? t('settings.ai.localOn') : t('settings.ai.localOff')) : ''}</div>
+          </div>
+        </div>
 
         <KeyField
           name="openai"
           label={t('settings.ai.imageKeyLabel')}
           hint={t('settings.ai.imageKeyHint')}
           placeholder="sk-…"
-          status={
-            aiStatus?.images.provider === 'openai'
-              ? t('settings.ai.imageStatusOn', { model: aiStatus.images.model, source: source(aiStatus.images.keySource) })
-              : t('settings.ai.imageStatusMock')
-          }
           canRemove={aiStatus?.images.keySource === 'settings'}
+          onSaved={loadAiStatus}
         />
       </section>
 
@@ -128,31 +225,31 @@ function KeyField({
   label,
   hint,
   placeholder,
-  status,
-  canRemove
+  canRemove,
+  onSaved
 }: {
   name: KeyName
   label: string
   hint: string
   placeholder: string
-  status: string
   canRemove: boolean
+  onSaved: () => Promise<void>
 }): JSX.Element {
   const { t } = useTranslation()
   const setAiKey = useStore((s) => s.setAiKey)
   const [key, setKey] = useState('')
   const [saved, setSaved] = useState(false)
 
-  async function save(): Promise<void> {
-    await setAiKey(name, key.trim() || null)
+  async function save(value: string | null): Promise<void> {
+    await setAiKey(name, value)
+    await onSaved()
     setKey('')
-    setSaved(true)
+    setSaved(Boolean(value))
   }
 
   return (
     <div>
-      <p className="text-sm text-slate-700">{status}</p>
-      <label className="field-label mt-3">{label}</label>
+      <label className="field-label">{label}</label>
       <div className="flex gap-2">
         <input
           type="password"
@@ -164,11 +261,11 @@ function KeyField({
             setSaved(false)
           }}
         />
-        <button className="btn-primary" disabled={!key.trim()} onClick={() => void save()}>
+        <button className="btn-primary" disabled={!key.trim()} onClick={() => void save(key.trim())}>
           <KeyRound size={16} /> {t('settings.ai.save')}
         </button>
         {canRemove && (
-          <button className="btn-secondary" onClick={() => void setAiKey(name, null)}>
+          <button className="btn-secondary" onClick={() => void save(null)}>
             {t('settings.ai.remove')}
           </button>
         )}

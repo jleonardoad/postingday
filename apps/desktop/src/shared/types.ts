@@ -111,8 +111,19 @@ export type MediaPatch = z.infer<typeof mediaPatchSchema>
 export const UI_LANGUAGES = ['es', 'en'] as const
 export type UiLanguage = (typeof UI_LANGUAGES)[number]
 
+export const TEXT_PROVIDER_MODES = ['auto', 'claude', 'ollama', 'mock'] as const
+export const IMAGE_PROVIDER_MODES = ['auto', 'openai', 'local', 'mock'] as const
+
 export const settingsSchema = z.object({
-  uiLanguage: z.enum(UI_LANGUAGES)
+  uiLanguage: z.enum(UI_LANGUAGES),
+  /** Qué escribe los textos: auto = Claude si hay clave, si no Ollama, si no ejemplo */
+  textProvider: z.enum(TEXT_PROVIDER_MODES).default('auto'),
+  /** Modelo de Ollama; vacío = el mejor instalado */
+  ollamaModel: z.string().max(120).default(''),
+  /** Qué genera las imágenes: auto = OpenAI si hay clave, si no servidor local, si no ejemplo */
+  imageProvider: z.enum(IMAGE_PROVIDER_MODES).default('auto'),
+  /** URL del servidor local de imágenes (Draw Things / SD WebUI) */
+  localImageUrl: z.string().max(200).default('http://127.0.0.1:7860')
 })
 export type AppSettings = z.infer<typeof settingsSchema>
 
@@ -155,7 +166,7 @@ export type PieceTexts = z.infer<typeof pieceTextsSchema>
 export const PIECE_STATUSES = ['draft', 'approved'] as const
 export type PieceStatus = (typeof PIECE_STATUSES)[number]
 
-export type ProviderName = 'mock' | 'claude'
+export type ProviderName = 'mock' | 'claude' | 'ollama'
 
 export interface Piece {
   id: number
@@ -225,7 +236,7 @@ export const imageInputSchema = z.object({
 })
 export type ImageInput = z.infer<typeof imageInputSchema>
 
-export type ImageProviderName = 'mock' | 'openai'
+export type ImageProviderName = 'mock' | 'openai' | 'local'
 export type KeyName = 'anthropic' | 'openai'
 
 export const piecePatchSchema = z.object({
@@ -239,16 +250,18 @@ export const piecePatchSchema = z.object({
 export type PiecePatch = z.infer<typeof piecePatchSchema>
 
 export interface AiStatus {
-  /** Textos */
+  /** Textos: proveedor que se usará ahora mismo */
   provider: ProviderName
   hasKey: boolean
   keySource: 'env' | 'settings' | null
   model: string
+  ollama: { available: boolean; models: string[]; model: string | null }
   /** Imágenes */
   images: {
     provider: ImageProviderName
     hasKey: boolean
     keySource: 'env' | 'settings' | null
     model: string
+    local: { available: boolean; url: string }
   }
 }

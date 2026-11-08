@@ -167,7 +167,33 @@
       "imageKeyLabel": "OpenAI API key (images)",
       "imageKeyHint": "To generate product photos when you have no image. Get it at platform.openai.com.",
       "imageStatusOn": "Images by OpenAI ({{model}}). Key from {{source}}.",
-      "imageStatusMock": "No image key: example cards are used instead of generated photos."
+      "imageStatusMock": "No image key: example cards are used instead of generated photos.",
+      "textTitle": "Texts",
+      "imageTitle": "Images",
+      "mode": "Who writes",
+      "imageMode": "Who generates images",
+      "modes": {
+        "auto": "Automatic (Claude if key, else Ollama, else example)",
+        "claude": "Claude (needs key)",
+        "ollama": "Ollama (local AI, free)",
+        "mock": "Example texts"
+      },
+      "imageModes": {
+        "auto": "Automatic (OpenAI if key, else local, else example)",
+        "openai": "OpenAI (needs key)",
+        "local": "Local generator (Draw Things / Stable Diffusion)",
+        "mock": "Example card"
+      },
+      "statusOllama": "Texts by the local AI: Ollama, model {{model}}.",
+      "ollamaModel": "Ollama model",
+      "ollamaAuto": "Automatic (best installed)",
+      "ollamaNone": "Ollama has no models installed. In Terminal: ollama pull qwen3:8b",
+      "ollamaOff": "Ollama is not responding. Open it or install it from ollama.com.",
+      "ollamaReady": "Ollama ready with {{count}} model(s).",
+      "imageStatusLocal": "Images from your local generator at {{url}}.",
+      "localUrl": "Local generator address",
+      "localOn": "Local generator detected.",
+      "localOff": "No local generator detected. Free on Mac: install Draw Things (App Store), download a model (e.g. FLUX.1 schnell) and enable “API Server” in its settings (port 7860)."
     }
   },
   "create": {
@@ -222,7 +248,9 @@
         "brand": "On your brand color"
       },
       "imageAi": "Images by OpenAI ({{model}}).",
-      "imageMock": "No image key: an example card is created. Add your OpenAI key in Settings for a real photo."
+      "imageMock": "No image key: an example card is created. Add your OpenAI key in Settings for a real photo.",
+      "aiOllama": "Texts are written by the local AI ({{model}}), free and without leaving your Mac.",
+      "imageLocal": "Images from your local generator (Draw Things / Stable Diffusion)."
     }
   },
   "formats": {
@@ -332,7 +360,8 @@
     },
     "provider": {
       "mock": "Example",
-      "claude": "AI"
+      "claude": "AI",
+      "ollama": "Local AI"
     },
     "open": "Open",
     "confirmDelete": "Delete this post? This cannot be undone."
@@ -372,7 +401,8 @@
     "claudeNote": "Texts written by the AI in your business tone. Edit anything you like.",
     "exportVideo": "Generate video (reel)",
     "exportingVideo": "Generating video… (about half a minute)",
-    "videoReady": "Video ready:"
+    "videoReady": "Video ready:",
+    "ollamaNote": "Texts written by the local AI (Ollama) in your business tone. Edit anything you like."
   },
   "capture": {
     "title": "Upload from phone",

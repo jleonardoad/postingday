@@ -29,7 +29,7 @@ const execFileP = promisify(execFile)
 export async function runSelfTest(dirs: MediaDirs, exportsDir: string, userData: string): Promise<void> {
   log('ffmpeg', await resolveBinaries())
   log('settings', getSettings())
-  log('ai', aiStatus())
+  log('ai', JSON.stringify(await aiStatus()))
 
   const { updatedAt: _ignored, ...base } = emptyBusiness
   const saved = saveBusiness({

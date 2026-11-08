@@ -167,7 +167,33 @@
       "imageKeyLabel": "Clave de API de OpenAI (imágenes)",
       "imageKeyHint": "Para generar fotos de producto cuando no tienes imagen. Consíguela en platform.openai.com.",
       "imageStatusOn": "Imágenes con OpenAI ({{model}}). Clave tomada de {{source}}.",
-      "imageStatusMock": "Sin clave de imágenes: se usan tarjetas de ejemplo en lugar de fotos generadas."
+      "imageStatusMock": "Sin clave de imágenes: se usan tarjetas de ejemplo en lugar de fotos generadas.",
+      "textTitle": "Textos",
+      "imageTitle": "Imágenes",
+      "mode": "Quién escribe",
+      "imageMode": "Quién genera las imágenes",
+      "modes": {
+        "auto": "Automático (Claude si hay clave, si no Ollama, si no ejemplo)",
+        "claude": "Claude (necesita clave)",
+        "ollama": "Ollama (IA local, gratis)",
+        "mock": "Textos de ejemplo"
+      },
+      "imageModes": {
+        "auto": "Automático (OpenAI si hay clave, si no local, si no ejemplo)",
+        "openai": "OpenAI (necesita clave)",
+        "local": "Generador local (Draw Things / Stable Diffusion)",
+        "mock": "Tarjeta de ejemplo"
+      },
+      "statusOllama": "Textos con la IA local: Ollama, modelo {{model}}.",
+      "ollamaModel": "Modelo de Ollama",
+      "ollamaAuto": "Automático (el mejor instalado)",
+      "ollamaNone": "Ollama no tiene modelos instalados. En la Terminal: ollama pull qwen3:8b",
+      "ollamaOff": "Ollama no responde. Ábrelo o instálalo desde ollama.com.",
+      "ollamaReady": "Ollama listo con {{count}} modelo(s).",
+      "imageStatusLocal": "Imágenes con tu generador local en {{url}}.",
+      "localUrl": "Dirección del generador local",
+      "localOn": "Generador local detectado.",
+      "localOff": "No se detecta ningún generador local. Gratis en Mac: instala Draw Things (App Store), descarga un modelo (p. ej. FLUX.1 schnell) y activa «API Server» en sus ajustes (puerto 7860)."
     }
   },
   "create": {
@@ -222,7 +248,9 @@
         "brand": "Con tu color de marca"
       },
       "imageAi": "Imágenes con OpenAI ({{model}}).",
-      "imageMock": "Sin clave de imágenes: se crea una tarjeta de ejemplo. Añade tu clave de OpenAI en Ajustes para una foto real."
+      "imageMock": "Sin clave de imágenes: se crea una tarjeta de ejemplo. Añade tu clave de OpenAI en Ajustes para una foto real.",
+      "aiOllama": "Los textos los escribe la IA local ({{model}}), gratis y sin salir de tu Mac.",
+      "imageLocal": "Imágenes con tu generador local (Draw Things / Stable Diffusion)."
     }
   },
   "formats": {
@@ -332,7 +360,8 @@
     },
     "provider": {
       "mock": "Ejemplo",
-      "claude": "IA"
+      "claude": "IA",
+      "ollama": "IA local"
     },
     "open": "Abrir",
     "confirmDelete": "¿Eliminar esta publicación? No se puede deshacer."
@@ -372,7 +401,8 @@
     "claudeNote": "Textos escritos por la IA con el tono de tu negocio. Edita lo que quieras.",
     "exportVideo": "Generar vídeo (reel)",
     "exportingVideo": "Generando vídeo… (medio minuto)",
-    "videoReady": "Vídeo listo:"
+    "videoReady": "Vídeo listo:",
+    "ollamaNote": "Textos escritos por la IA local (Ollama) con el tono de tu negocio. Edita lo que quieras."
   },
   "capture": {
     "title": "Subir desde el celular",

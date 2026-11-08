@@ -228,7 +228,11 @@ function FormatDetail({
                 {generatingImage ? t('create.detail.generatingImage') : t('create.detail.generateImage')}
               </button>
               <span className="text-xs text-slate-500">
-                {aiStatus?.images.provider === 'openai' ? t('create.detail.imageAi', { model: aiStatus.images.model }) : t('create.detail.imageMock')}
+                {aiStatus?.images.provider === 'openai'
+                  ? t('create.detail.imageAi', { model: aiStatus.images.model })
+                  : aiStatus?.images.provider === 'local'
+                    ? t('create.detail.imageLocal')
+                    : t('create.detail.imageMock')}
               </span>
             </div>
           </div>
@@ -276,7 +280,11 @@ function FormatDetail({
               {generating ? t('create.detail.generating') : t('create.detail.generate')}
             </button>
             <span className="text-xs text-slate-500">
-              {aiStatus?.provider === 'claude' ? t('create.detail.aiClaude', { model: aiStatus.model }) : t('create.detail.aiMock')}
+              {aiStatus?.provider === 'claude'
+                ? t('create.detail.aiClaude', { model: aiStatus.model })
+                : aiStatus?.provider === 'ollama'
+                  ? t('create.detail.aiOllama', { model: aiStatus.model })
+                  : t('create.detail.aiMock')}
             </span>
           </div>
         </div>

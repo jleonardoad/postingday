@@ -3,10 +3,11 @@ import type { AiStatus, GenerateInput, KeyName, Piece } from '@shared/types'
 import { getBusiness } from '../db/business'
 import { getMedia } from '../db/media'
 import { getPiece, insertPiece, replaceCopy } from '../db/pieces'
-import { getSecret, setSecret } from '../db/settings'
+import { getSecret, getSettings, setSecret } from '../db/settings'
 import { imageStatus, OPENAI_SECRET } from '../images/generate'
 import { ClaudeProvider, CLAUDE_MODEL, describeClaudeError } from './claude'
 import { MockProvider } from './mock'
+import { chooseModel, ollamaModels, OllamaProvider } from './ollama'
 import type { TextProvider } from './provider'
 
 const SECRET_NAME = 'anthropicApiKey'
@@ -19,12 +20,23 @@ function apiKey(): { key: string; source: 'env' | 'settings' } | null {
   return null
 }
 
-export function aiStatus(): AiStatus {
+export async function aiStatus(): Promise<AiStatus> {
   const k = apiKey()
-  return { provider: k ? 'claude' : 'mock', hasKey: Boolean(k), keySource: k?.source ?? null, model: CLAUDE_MODEL, images: imageStatus() }
+  const settings = getSettings()
+  const installed = await ollamaModels()
+  const ollamaModel = chooseModel(installed, settings.ollamaModel)
+  const provider = await pickProvider()
+  return {
+    provider: provider.name,
+    hasKey: Boolean(k),
+    keySource: k?.source ?? null,
+    model: provider.name === 'claude' ? CLAUDE_MODEL : provider.name === 'ollama' ? (provider as OllamaProvider).model : 'ejemplo',
+    ollama: { available: installed.length > 0, models: installed, model: ollamaModel },
+    images: await imageStatus()
+  }
 }
 
-export function setApiKey(name: KeyName, key: string | null): AiStatus {
+export async function setApiKey(name: KeyName, key: string | null): Promise<AiStatus> {
   const clean = key?.trim() || null
   if (name === 'anthropic') {
     if (clean && !/^sk-ant-/.test(clean)) throw new Error('La clave de Anthropic debe empezar por "sk-ant-".')
@@ -36,9 +48,18 @@ export function setApiKey(name: KeyName, key: string | null): AiStatus {
   return aiStatus()
 }
 
-export function pickProvider(): TextProvider {
+export async function pickProvider(): Promise<TextProvider> {
+  const settings = getSettings()
+  const mode = settings.textProvider
   const k = apiKey()
-  return k ? new ClaudeProvider(k.key) : new MockProvider()
+  if ((mode === 'auto' || mode === 'claude') && k) return new ClaudeProvider(k.key)
+  if (mode === 'claude') throw new Error('Has elegido Claude pero no hay clave de API de Anthropic en Ajustes.')
+  if (mode === 'auto' || mode === 'ollama') {
+    const model = chooseModel(await ollamaModels(), settings.ollamaModel)
+    if (model) return new OllamaProvider(model)
+    if (mode === 'ollama') throw new Error('Has elegido Ollama pero no hay ningún modelo instalado (ejecuta: ollama pull qwen3:8b).')
+  }
+  return new MockProvider()
 }
 
 export async function generatePiece(input: GenerateInput): Promise<Piece> {
@@ -48,7 +69,7 @@ export async function generatePiece(input: GenerateInput): Promise<Piece> {
   const media = input.mediaIds.map((id) => getMedia(id)).filter((m): m is NonNullable<typeof m> => Boolean(m))
   const mediaNotes = media.map((m) => [m.note, ...m.tags].filter(Boolean).join(', ')).filter(Boolean)
 
-  const provider = pickProvider()
+  const provider = await pickProvider()
   let copy
   try {
     copy = await provider.generate({ business, format, ratio: input.ratio, language: business.language, topic: input.topic ?? '', mediaNotes })

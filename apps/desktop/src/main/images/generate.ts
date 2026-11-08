@@ -1,11 +1,12 @@
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { ImageInput, MediaItem } from '@shared/types'
+import type { AiStatus, ImageInput, MediaItem } from '@shared/types'
 import { getBusiness } from '../db/business'
 import { updateMedia } from '../db/media'
-import { getSecret } from '../db/settings'
+import { getSecret, getSettings } from '../db/settings'
 import { importFile, type MediaDirs } from '../media/import'
+import { LocalImageProvider, localImageAvailable } from './local'
 import { MockImageProvider } from './mock'
 import { OPENAI_IMAGE_MODEL, OpenAiImageProvider } from './openai'
 import type { ImageProvider } from './provider'
@@ -20,19 +21,36 @@ export function openAiKey(): { key: string; source: 'env' | 'settings' } | null 
   return null
 }
 
-export function imageStatus(): { provider: 'mock' | 'openai'; hasKey: boolean; keySource: 'env' | 'settings' | null; model: string } {
+export async function imageStatus(): Promise<AiStatus['images']> {
   const k = openAiKey()
-  return { provider: k ? 'openai' : 'mock', hasKey: Boolean(k), keySource: k?.source ?? null, model: OPENAI_IMAGE_MODEL }
+  const settings = getSettings()
+  const localAvailable = await localImageAvailable(settings.localImageUrl)
+  const provider = await pickImageProvider().catch(() => new MockImageProvider())
+  return {
+    provider: provider.name,
+    hasKey: Boolean(k),
+    keySource: k?.source ?? null,
+    model: provider.name === 'openai' ? OPENAI_IMAGE_MODEL : provider.name === 'local' ? 'local' : 'ejemplo',
+    local: { available: localAvailable, url: settings.localImageUrl }
+  }
 }
 
-export function pickImageProvider(): ImageProvider {
+export async function pickImageProvider(): Promise<ImageProvider> {
+  const settings = getSettings()
+  const mode = settings.imageProvider
   const k = openAiKey()
-  return k ? new OpenAiImageProvider(k.key) : new MockImageProvider()
+  if ((mode === 'auto' || mode === 'openai') && k) return new OpenAiImageProvider(k.key)
+  if (mode === 'openai') throw new Error('Has elegido OpenAI pero no hay clave de API de OpenAI en Ajustes.')
+  if (mode === 'auto' || mode === 'local') {
+    if (await localImageAvailable(settings.localImageUrl)) return new LocalImageProvider(settings.localImageUrl)
+    if (mode === 'local') throw new Error(`No hay un generador de imágenes local en ${settings.localImageUrl}. Abre Draw Things con «API Server» activado o Stable Diffusion WebUI.`)
+  }
+  return new MockImageProvider()
 }
 
 /** Genera la imagen y la importa a la biblioteca con etiqueta «ia» y el tema como nota */
 export async function generateImage(input: ImageInput, dirs: MediaDirs): Promise<MediaItem> {
-  const provider = pickImageProvider()
+  const provider = await pickImageProvider()
   const business = getBusiness()
   const { bytes, ext } = await provider.generate({ topic: input.topic, style: input.style, ratio: input.ratio, business })
   const tmp = await mkdtemp(join(tmpdir(), 'postingday-img-'))

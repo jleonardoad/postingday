@@ -71,7 +71,7 @@ function initialRoute(): { view: View; initialFormat: string | null; pieceId: nu
 
 export const useStore = create<State>((set, get) => ({
   ...initialRoute(),
-  settings: { uiLanguage: 'es' },
+  settings: { uiLanguage: 'es', textProvider: 'auto', ollamaModel: '', imageProvider: 'auto', localImageUrl: 'http://127.0.0.1:7860' },
   business: null,
   media: [],
   mediaLoaded: false,

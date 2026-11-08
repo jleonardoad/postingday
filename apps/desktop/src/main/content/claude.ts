@@ -12,7 +12,7 @@ import { clampCopy, type GeneratedCopy, type GenerateRequest, type TextProvider 
 export const CLAUDE_MODEL = 'claude-opus-5-5'
 
 /** Esquema de salida sin restricciones de longitud (las aplica clampCopy después) */
-const outputSchema = z.object({
+export const outputSchema = z.object({
   kicker: z.string(),
   headline: z.string(),
   sub: z.string(),

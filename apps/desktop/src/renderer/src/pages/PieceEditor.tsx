@@ -106,7 +106,7 @@ function Editor({ piece }: { piece: Piece }): JSX.Element {
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">{t(`formats.${format.id}.name`)}</h1>
               <p className="mt-1 text-sm text-slate-500">
-                {piece.provider === 'mock' ? t('piece.mockNote') : t('piece.claudeNote')}
+                {piece.provider === 'mock' ? t('piece.mockNote') : piece.provider === 'ollama' ? t('piece.ollamaNote') : t('piece.claudeNote')}
                 {savedAt && <span className="ml-2 text-emerald-600">{t('common.saved')}</span>}
               </p>
             </div>
