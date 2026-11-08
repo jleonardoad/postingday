@@ -68,5 +68,9 @@ export const MIGRATIONS: { version: number; sql: string }[] = [
       );
       CREATE INDEX pieces_status_idx ON pieces (status);
     `
+  },
+  {
+    version: 3,
+    sql: `ALTER TABLE pieces ADD COLUMN video_path TEXT;`
   }
 ]

@@ -31,13 +31,13 @@ interface Props {
 const FONT = "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
 
 /** Reduce el tamaño de letra cuando el texto es más largo de lo cómodo */
-function fitSize(text: string, base: number, comfortable: number): number {
+export function fitSize(text: string, base: number, comfortable: number): number {
   const len = text.length
   if (len <= comfortable) return base
   return Math.max(Math.round(base * 0.55), Math.round(base * Math.sqrt(comfortable / len)))
 }
 
-const clamp = (lines: number): CSSProperties => ({
+export const clamp = (lines: number): CSSProperties => ({
   display: '-webkit-box',
   WebkitLineClamp: lines,
   WebkitBoxOrient: 'vertical',

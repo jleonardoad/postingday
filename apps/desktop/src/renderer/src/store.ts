@@ -204,7 +204,9 @@ export const useStore = create<State>((set, get) => ({
     set({ exporting: true })
     try {
       const file = await window.api.pieces.export(id, ratio)
-      set({ pieces: get().pieces.map((p) => (p.id === id ? { ...p, exportPath: file } : p)) })
+      set({
+        pieces: get().pieces.map((p) => (p.id === id ? (ratio === 'reel' ? { ...p, videoPath: file } : { ...p, exportPath: file }) : p))
+      })
       return file
     } catch (err) {
       set({ error: message(err) })

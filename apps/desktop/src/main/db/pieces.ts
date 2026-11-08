@@ -20,6 +20,7 @@ interface Row {
   status: PieceStatus
   provider: ProviderName
   export_path: string | null
+  video_path: string | null
   created_at: string
   updated_at: string
 }
@@ -54,6 +55,7 @@ function rowToPiece(r: Row): Piece {
     status: r.status,
     provider: r.provider,
     exportPath: r.export_path,
+    videoPath: r.video_path,
     createdAt: r.created_at,
     updatedAt: r.updated_at
   }
@@ -125,6 +127,10 @@ export function updatePiece(id: number, patch: PiecePatch): Piece {
 
 export function setExportPath(id: number, path: string): void {
   getDb().prepare('UPDATE pieces SET export_path = ? WHERE id = ?').run(path, id)
+}
+
+export function setVideoPath(id: number, path: string): void {
+  getDb().prepare('UPDATE pieces SET video_path = ? WHERE id = ?').run(path, id)
 }
 
 export function deletePiece(id: number): Piece | null {

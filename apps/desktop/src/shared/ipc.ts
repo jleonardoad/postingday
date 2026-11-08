@@ -9,7 +9,8 @@ import type {
   MediaItem,
   MediaPatch,
   Piece,
-  PiecePatch
+  PiecePatch,
+  ReelScript
 } from './types'
 
 /** Nombres de canal IPC. Un solo sitio para no desincronizar main y preload. */
@@ -32,6 +33,7 @@ export const CH = {
   piecesUpdate: 'pieces:update',
   piecesRemove: 'pieces:remove',
   piecesExport: 'pieces:export',
+  piecesScript: 'pieces:script',
   aiStatus: 'ai:status',
   aiSetKey: 'ai:setKey',
   captureStart: 'capture:start',
@@ -84,8 +86,10 @@ export interface Api {
     get(id: number): Promise<Piece | null>
     update(id: number, patch: PiecePatch): Promise<Piece>
     remove(id: number): Promise<void>
-    /** Exporta la pieza a PNG y devuelve la ruta del archivo */
+    /** Exporta la pieza (post → PNG, reel → MP4) y devuelve la ruta del archivo */
     export(id: number, ratio: OutputKind): Promise<string>
+    /** Guion de escenas del reel (lo usa la ventana de capas y la vista previa) */
+    script(id: number): Promise<ReelScript>
   }
   ai: {
     status(): Promise<AiStatus>

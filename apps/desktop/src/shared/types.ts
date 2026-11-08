@@ -167,9 +167,39 @@ export interface Piece {
   hashtags: string[]
   status: PieceStatus
   provider: ProviderName
+  /** PNG exportado del post */
   exportPath: string | null
+  /** MP4 exportado del reel */
+  videoPath: string | null
   createdAt: string
   updatedAt: string
+}
+
+// ---------- Guion de reel (escenas) ----------
+
+export type SceneRole = 'hook' | 'body' | 'cta' | 'labelA' | 'labelB'
+export type KenBurns = 'in' | 'out' | 'left' | 'right' | 'none'
+
+export interface ReelScene {
+  index: number
+  role: SceneRole
+  /** 'photo' = Ken Burns sobre una foto, 'clip' = fragmento de vídeo, 'card' = fondo de marca */
+  kind: 'photo' | 'clip' | 'card'
+  mediaId: number | null
+  durationSec: number
+  /** Segundo del clip en el que empieza el fragmento */
+  clipStartSec: number
+  kenburns: KenBurns
+  texts: { kicker?: string; headline?: string; sub?: string; cta?: string; badge?: string; label?: string }
+}
+
+export interface ReelScript {
+  width: number
+  height: number
+  fps: number
+  totalSec: number
+  scenes: ReelScene[]
+  music: { kind: 'demo' | 'file'; name: string | null }
 }
 
 export const generateInputSchema = z.object({

@@ -17,7 +17,7 @@ import { deletePiece, getPiece, listPieces, updatePiece } from './db/pieces'
 import { getSettings, setSettings } from './db/settings'
 import { resolveBinaries } from './media/ffmpeg'
 import { importFromDialog, removeMedia, type MediaDirs } from './media/import'
-import { exportPiece } from './render/export'
+import { exportPiece, scriptFor } from './render/export'
 
 export interface IpcContext {
   paths: Omit<AppPaths, 'ffmpeg' | 'ffprobe'>
@@ -78,8 +78,9 @@ export function registerIpc(ctx: IpcContext): void {
     deletePiece(idSchema.parse(id))
   })
   ipcMain.handle(CH.piecesExport, (_e, id: unknown, ratio: unknown) =>
-    exportPiece(idSchema.parse(id), ratioSchema.parse(ratio), ctx.paths.exports)
+    exportPiece(idSchema.parse(id), ratioSchema.parse(ratio), ctx.paths.exports, ctx.dirs, ctx.paths.userData)
   )
+  ipcMain.handle(CH.piecesScript, (_e, id: unknown) => scriptFor(idSchema.parse(id), ctx.paths.userData))
 
   ipcMain.handle(CH.aiStatus, () => aiStatus())
   ipcMain.handle(CH.aiSetKey, (_e, key: unknown) => setApiKey(z.string().nullable().parse(key)))

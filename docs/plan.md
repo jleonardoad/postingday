@@ -284,6 +284,8 @@ Supone ~20 horas por semana tuyas con Claude Code como par. Con menos horas, est
 
 **Hito de fase 1:** 5 pilotos publicando ≥ 3 piezas por semana cada uno durante 2 semanas seguidas sin tu intervención.
 
+**Estado real al 2026-11-08 (adelantado respecto al calendario):** sprint 1 completo salvo inicio de sesión (descartado: sin cuentas) y la captura móvil, que se hizo por Wi-Fi local con QR. Del sprint 2 está el motor de textos (proveedor de prueba y Claude listo para clave) y el editor con aprobación. Del sprint 3 está el **motor de reels v1**: guion de 3 escenas por formato, capas de texto transparentes desde las plantillas, Ken Burns sobre fotos o fragmentos de clips, música de fondo (archivos del usuario o cama sintética), MP4 1080×1920 en ~5 s. Falta: voz en off y subtítulos (necesitan clave de TTS), transiciones entre escenas, plan mensual, lista de tomas en el teléfono, publicación (sprint 4).
+
 ### Fase 2 — Pilotos → clientes (semanas 11-16)
 
 - Medir cada semana: piezas publicadas, tiempo hasta aprobar, porcentaje de piezas editadas antes de aprobar, piezas rechazadas y por qué, soporte que pidieron.

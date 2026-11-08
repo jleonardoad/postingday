@@ -88,7 +88,7 @@ async function bootstrap(): Promise<void> {
 
   const dbPath = join(userData, 'postingday.db')
   openDb(dbPath)
-  installProtocolHandler(dirs.media, dirs.thumbs)
+  installProtocolHandler(dirs.media, dirs.thumbs, exportsDir)
 
   registerIpc({
     paths: { userData, media: dirs.media, thumbs: dirs.thumbs, exports: exportsDir, db: dbPath },
@@ -96,7 +96,7 @@ async function bootstrap(): Promise<void> {
     getWindow: () => mainWindow
   })
 
-  if (process.env.PD_SELFTEST) await runSelfTest(dirs, exportsDir)
+  if (process.env.PD_SELFTEST) await runSelfTest(dirs, exportsDir, userData)
 
   // Captura de la página del teléfono a tamaño de móvil: PD_PHONE_SHOT=/ruta.png
   const phoneShot = process.env.PD_PHONE_SHOT

@@ -345,14 +345,17 @@
     "approve": "Aprobar",
     "unapprove": "Volver a borrador",
     "approvedNote": "Aprobada. En el sprint 4 podrás programarla y se publicará sola.",
-    "export": "Descargar imagen (PNG)",
+    "export": "Descargar imagen (post)",
     "exporting": "Exportando…",
     "exported": "Imagen guardada:",
     "reveal": "Mostrar en Finder",
     "preview": "Vista previa",
     "updated": "Actualizada: {{date}}",
     "mockNote": "Textos de ejemplo (sin IA). Edítalos a mano o añade tu clave en Ajustes.",
-    "claudeNote": "Textos escritos por la IA con el tono de tu negocio. Edita lo que quieras."
+    "claudeNote": "Textos escritos por la IA con el tono de tu negocio. Edita lo que quieras.",
+    "exportVideo": "Generar vídeo (reel)",
+    "exportingVideo": "Generando vídeo… (medio minuto)",
+    "videoReady": "Vídeo listo:"
   },
   "capture": {
     "title": "Subir desde el celular",

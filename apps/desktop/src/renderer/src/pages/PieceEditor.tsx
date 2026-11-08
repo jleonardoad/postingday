@@ -1,5 +1,5 @@
 import { useEffect, useState, type JSX } from 'react'
-import { ArrowLeft, CheckCircle2, Download, FolderOpen, Loader2, RefreshCw, Undo2 } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Download, Film, FolderOpen, Loader2, RefreshCw, Undo2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { FORMATS, type OutputKind } from '@shared/formats'
 import type { Piece, PieceTexts } from '@shared/types'
@@ -84,12 +84,15 @@ function Editor({ piece }: { piece: Piece }): JSX.Element {
     await updatePiece(piece.id, { status: piece.status === 'approved' ? 'draft' : 'approved' })
   }
 
-  async function onExport(): Promise<void> {
+  async function onExport(kind: OutputKind): Promise<void> {
     await save()
-    await exportPiece(piece.id, ratio)
+    await exportPiece(piece.id, kind)
   }
 
   const approved = piece.status === 'approved'
+  const exportsUrl = (path: string): string => `pd-media://local/exports/${encodeURIComponent(path.split('/').pop() ?? '')}`
+  const canReel = format.outputs.includes('reel')
+  const canPost = format.outputs.includes('post')
 
   return (
     <div>
@@ -151,10 +154,18 @@ function Editor({ piece }: { piece: Piece }): JSX.Element {
               {generating ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
               {generating ? t('piece.regenerating') : t('piece.regenerate')}
             </button>
-            <button className="btn-secondary" disabled={exporting} onClick={() => void onExport()}>
-              {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-              {exporting ? t('piece.exporting') : t('piece.export')}
-            </button>
+            {canPost && (
+              <button className="btn-secondary" disabled={exporting} onClick={() => void onExport('post')}>
+                {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+                {exporting ? t('piece.exporting') : t('piece.export')}
+              </button>
+            )}
+            {canReel && (
+              <button className="btn-secondary" disabled={exporting} onClick={() => void onExport('reel')}>
+                {exporting ? <Loader2 size={16} className="animate-spin" /> : <Film size={16} />}
+                {exporting ? t('piece.exportingVideo') : t('piece.exportVideo')}
+              </button>
+            )}
             <button className={approved ? 'btn-secondary' : 'btn-primary'} onClick={() => void toggleApprove()}>
               {approved ? <Undo2 size={16} /> : <CheckCircle2 size={16} />}
               {approved ? t('piece.unapprove') : t('piece.approve')}
@@ -169,6 +180,19 @@ function Editor({ piece }: { piece: Piece }): JSX.Element {
               <button className="inline-flex shrink-0 items-center gap-1 font-medium underline" onClick={() => void window.api.app.reveal(piece.exportPath!)}>
                 <FolderOpen size={14} /> {t('piece.reveal')}
               </button>
+            </div>
+          )}
+          {piece.videoPath && (
+            <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+              <div className="flex items-center gap-3">
+                <span className="min-w-0 flex-1 truncate">
+                  {t('piece.videoReady')} <span className="font-mono text-xs">{piece.videoPath}</span>
+                </span>
+                <button className="inline-flex shrink-0 items-center gap-1 font-medium underline" onClick={() => void window.api.app.reveal(piece.videoPath!)}>
+                  <FolderOpen size={14} /> {t('piece.reveal')}
+                </button>
+              </div>
+              <video key={piece.videoPath} src={exportsUrl(piece.videoPath)} controls className="mt-3 max-h-96 rounded-lg bg-black" />
             </div>
           )}
           {approved && <p className="mt-3 text-xs text-slate-500">{t('piece.approvedNote')}</p>}

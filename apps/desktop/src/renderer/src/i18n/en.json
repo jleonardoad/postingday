@@ -345,14 +345,17 @@
     "approve": "Approve",
     "unapprove": "Back to draft",
     "approvedNote": "Approved. In sprint 4 you will schedule it and it will publish on its own.",
-    "export": "Download image (PNG)",
+    "export": "Download image (post)",
     "exporting": "Exporting…",
     "exported": "Image saved:",
     "reveal": "Show in Finder",
     "preview": "Preview",
     "updated": "Updated: {{date}}",
     "mockNote": "Example texts (no AI). Edit them by hand or add your key in Settings.",
-    "claudeNote": "Texts written by the AI in your business tone. Edit anything you like."
+    "claudeNote": "Texts written by the AI in your business tone. Edit anything you like.",
+    "exportVideo": "Generate video (reel)",
+    "exportingVideo": "Generating video… (about half a minute)",
+    "videoReady": "Video ready:"
   },
   "capture": {
     "title": "Upload from phone",

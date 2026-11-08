@@ -10,7 +10,7 @@ import { pathToFileURL } from 'node:url'
  */
 export const SCHEME = 'pd-media'
 
-let dirs: { media: string; thumbs: string } | null = null
+let dirs: { media: string; thumbs: string; exports: string } | null = null
 
 export function registerSchemePrivileges(): void {
   protocol.registerSchemesAsPrivileged([
@@ -21,14 +21,15 @@ export function registerSchemePrivileges(): void {
   ])
 }
 
-export function installProtocolHandler(mediaDir: string, thumbsDir: string): void {
-  dirs = { media: mediaDir, thumbs: thumbsDir }
+export function installProtocolHandler(mediaDir: string, thumbsDir: string, exportsDir: string): void {
+  dirs = { media: mediaDir, thumbs: thumbsDir, exports: exportsDir }
   protocol.handle(SCHEME, (request) => {
     const url = new URL(request.url)
     const [, folder, ...rest] = url.pathname.split('/')
     const name = basename(decodeURIComponent(rest.join('/')))
     if (!name || name.startsWith('.')) return new Response('Not found', { status: 404 })
-    const base = folder === 'files' ? dirs?.media : folder === 'thumbs' ? dirs?.thumbs : null
+    const base =
+      folder === 'files' ? dirs?.media : folder === 'thumbs' ? dirs?.thumbs : folder === 'exports' ? dirs?.exports : null
     if (!base) return new Response('Not found', { status: 404 })
     return net.fetch(pathToFileURL(join(base, name)).toString())
   })
@@ -40,4 +41,8 @@ export function mediaUrl(fileName: string): string {
 
 export function thumbUrl(thumbName: string): string {
   return `${SCHEME}://local/thumbs/${encodeURIComponent(thumbName)}`
+}
+
+export function exportUrl(fileName: string): string {
+  return `${SCHEME}://local/exports/${encodeURIComponent(basename(fileName))}`
 }

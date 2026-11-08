@@ -40,7 +40,8 @@ const api: Api = {
     get: (id: number) => ipcRenderer.invoke(CH.piecesGet, id),
     update: (id: number, patch: PiecePatch) => ipcRenderer.invoke(CH.piecesUpdate, id, patch),
     remove: (id: number) => ipcRenderer.invoke(CH.piecesRemove, id),
-    export: (id: number, ratio: OutputKind) => ipcRenderer.invoke(CH.piecesExport, id, ratio)
+    export: (id: number, ratio: OutputKind) => ipcRenderer.invoke(CH.piecesExport, id, ratio),
+    script: (id: number) => ipcRenderer.invoke(CH.piecesScript, id)
   },
   ai: {
     status: () => ipcRenderer.invoke(CH.aiStatus),
