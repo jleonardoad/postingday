@@ -179,9 +179,10 @@
         "mock": "Textos de ejemplo"
       },
       "imageModes": {
-        "auto": "Automático (OpenAI si hay clave, si no local, si no ejemplo)",
+        "auto": "Automático (OpenAI si hay clave, si no motor integrado, si no servidor local, si no ejemplo)",
         "openai": "OpenAI (necesita clave)",
-        "local": "Generador local (Draw Things / Stable Diffusion)",
+        "sdcpp": "Motor local integrado (gratis)",
+        "local": "Servidor local externo (Draw Things / Stable Diffusion WebUI)",
         "mock": "Tarjeta de ejemplo"
       },
       "statusOllama": "Textos con la IA local: Ollama, modelo {{model}}.",
@@ -193,7 +194,15 @@
       "imageStatusLocal": "Imágenes con tu generador local en {{url}}.",
       "localUrl": "Dirección del generador local",
       "localOn": "Generador local detectado.",
-      "localOff": "No se detecta ningún generador local. Gratis en Mac: instala Draw Things (App Store), descarga un modelo (p. ej. FLUX.1 schnell) y activa «API Server» en sus ajustes (puerto 7860)."
+      "localOff": "No se detecta ningún generador local. Gratis en Mac: instala Draw Things (App Store), descarga un modelo (p. ej. FLUX.1 schnell) y activa «API Server» en sus ajustes (puerto 7860).",
+      "imageStatusEngine": "Imágenes con el motor local integrado ({{model}}), en tu Mac y gratis.",
+      "engineTitle": "Motor local integrado: stable-diffusion.cpp + {{model}}",
+      "engineUnsupported": "Por ahora solo en Mac con Apple Silicon.",
+      "engineNotInstalled": "No instalado. Descarga ~9 GB (binario y modelo, licencias MIT y Apache) a la carpeta de datos de PostingDay. Se puede pausar y reanudar.",
+      "engineInstalled": "Instalado. Arranca solo al generar la primera imagen.",
+      "engineRunning": "Instalado y en marcha.",
+      "engineInstall": "Instalar motor local (9 GB)",
+      "engineInstalling": "Descargando…"
     }
   },
   "create": {
@@ -248,9 +257,10 @@
         "brand": "Con tu color de marca"
       },
       "imageAi": "Imágenes con OpenAI ({{model}}).",
-      "imageMock": "Sin clave de imágenes: se crea una tarjeta de ejemplo. Añade tu clave de OpenAI en Ajustes para una foto real.",
+      "imageMock": "Sin motor de imágenes: se crea una tarjeta de ejemplo. Instala el motor local gratuito en Ajustes o añade tu clave de OpenAI.",
       "aiOllama": "Los textos los escribe la IA local ({{model}}), gratis y sin salir de tu Mac.",
-      "imageLocal": "Imágenes con tu generador local (Draw Things / Stable Diffusion)."
+      "imageLocal": "Imágenes con tu generador local (Draw Things / Stable Diffusion).",
+      "imageEngine": "Imágenes con el motor local integrado ({{model}}), gratis y sin salir de tu Mac. La primera tarda ~1 min en arrancar."
     }
   },
   "formats": {

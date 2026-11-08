@@ -16,7 +16,9 @@ import { getBusiness, saveBusiness } from './db/business'
 import { listMedia, updateMedia } from './db/media'
 import { deletePiece, getPiece, listPieces, updatePiece } from './db/pieces'
 import { getSettings, setSettings } from './db/settings'
-import { generateImage } from './images/generate'
+import { aiStatus as aiStatusNow } from './content/generate'
+import { generateImage, setImagesUserData } from './images/generate'
+import { installEngine } from './images/sdcpp'
 import { resolveBinaries } from './media/ffmpeg'
 import { importFromDialog, removeMedia, type MediaDirs } from './media/import'
 import { exportPiece, scriptFor } from './render/export'
@@ -31,6 +33,7 @@ const idSchema = z.number().int().positive()
 const ratioSchema = z.enum(['post', 'reel'])
 
 export function registerIpc(ctx: IpcContext): void {
+  setImagesUserData(ctx.paths.userData)
   const insideApp = (p: string): boolean => {
     const allowed = [ctx.paths.userData, ctx.paths.media, ctx.paths.thumbs, ctx.paths.exports]
     return allowed.some((a) => p === a || p.startsWith(a + '/'))
@@ -71,6 +74,12 @@ export function registerIpc(ctx: IpcContext): void {
 
   ipcMain.handle(CH.contentGenerate, (_e, input: unknown) => generatePiece(generateInputSchema.parse(input)))
   ipcMain.handle(CH.imagesGenerate, (_e, input: unknown) => generateImage(imageInputSchema.parse(input), ctx.dirs))
+  ipcMain.handle(CH.imagesInstallEngine, async (e) => {
+    await installEngine(ctx.paths.userData, (p) => {
+      if (!e.sender.isDestroyed()) e.sender.send(CH.imagesInstallProgress, p)
+    })
+    return aiStatusNow()
+  })
 
   ipcMain.handle(CH.piecesList, () => listPieces())
   ipcMain.handle(CH.piecesGet, (_e, id: unknown) => getPiece(idSchema.parse(id)))

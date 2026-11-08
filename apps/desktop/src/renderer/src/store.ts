@@ -3,6 +3,7 @@ import type { OutputKind } from '@shared/formats'
 import type {
   AiStatus,
   AppSettings,
+  EngineInstallProgress,
   Business,
   BusinessInput,
   GenerateInput,
@@ -34,6 +35,8 @@ interface State {
   generating: boolean
   generatingImage: boolean
   exporting: boolean
+  installingEngine: boolean
+  engineProgress: EngineInstallProgress | null
   error: string | null
 
   setView: (v: View) => void
@@ -54,6 +57,7 @@ interface State {
   exportPiece: (id: number, ratio: OutputKind) => Promise<string | null>
   setAiKey: (name: KeyName, key: string | null) => Promise<void>
   generateImage: (input: ImageInput) => Promise<MediaItem | null>
+  installEngine: () => Promise<void>
 }
 
 function message(err: unknown): string {
@@ -82,6 +86,8 @@ export const useStore = create<State>((set, get) => ({
   generating: false,
   generatingImage: false,
   exporting: false,
+  installingEngine: false,
+  engineProgress: null,
   error: null,
 
   setView: (view) => set({ view }),
@@ -226,6 +232,20 @@ export const useStore = create<State>((set, get) => ({
       set({ aiStatus: await window.api.ai.setKey(name, key), error: null })
     } catch (err) {
       set({ error: message(err) })
+    }
+  },
+
+  installEngine: async () => {
+    set({ installingEngine: true, engineProgress: null, error: null })
+    const off = window.api.images.onInstallProgress((p) => set({ engineProgress: p }))
+    try {
+      const status = await window.api.images.installEngine()
+      set({ aiStatus: status })
+    } catch (err) {
+      set({ error: message(err) })
+    } finally {
+      off()
+      set({ installingEngine: false, engineProgress: null })
     }
   },
 

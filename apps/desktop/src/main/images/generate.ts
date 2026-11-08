@@ -1,12 +1,13 @@
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { AiStatus, ImageInput, MediaItem } from '@shared/types'
+import type { AiStatus, ImageInput, ImageProviderName, MediaItem } from '@shared/types'
 import { getBusiness } from '../db/business'
 import { updateMedia } from '../db/media'
 import { getSecret, getSettings } from '../db/settings'
 import { importFile, type MediaDirs } from '../media/import'
-import { LocalImageProvider, localImageAvailable } from './local'
+import { externalParams, LocalImageProvider, localImageAvailable } from './local'
+import { engineParams, engineStatus, ensureEngine } from './sdcpp'
 import { MockImageProvider } from './mock'
 import { OPENAI_IMAGE_MODEL, OpenAiImageProvider } from './openai'
 import type { ImageProvider } from './provider'
@@ -21,18 +22,48 @@ export function openAiKey(): { key: string; source: 'env' | 'settings' } | null 
   return null
 }
 
+let userDataDir = ''
+export function setImagesUserData(dir: string): void {
+  userDataDir = dir
+}
+
 export async function imageStatus(): Promise<AiStatus['images']> {
   const k = openAiKey()
   const settings = getSettings()
   const localAvailable = await localImageAvailable(settings.localImageUrl)
-  const provider = await pickImageProvider().catch(() => new MockImageProvider())
+  const eng = await engineStatus(userDataDir)
+  const name = await pickImageProviderName()
   return {
-    provider: provider.name,
+    provider: name,
     hasKey: Boolean(k),
     keySource: k?.source ?? null,
-    model: provider.name === 'openai' ? OPENAI_IMAGE_MODEL : provider.name === 'local' ? 'local' : 'ejemplo',
-    local: { available: localAvailable, url: settings.localImageUrl }
+    model: name === 'openai' ? OPENAI_IMAGE_MODEL : name === 'sdcpp' ? eng.model : name === 'local' ? 'local' : 'ejemplo',
+    local: { available: localAvailable, url: settings.localImageUrl },
+    engine: {
+      supported: eng.supported,
+      installed: eng.installed,
+      running: eng.running,
+      model: eng.model,
+      missing: [...(eng.binary ? [] : ['sd-server']), ...eng.models.filter((m) => !m.present).map((m) => m.name)]
+    }
   }
+}
+
+/** Qué proveedor se usaría ahora (sin arrancar nada) */
+async function pickImageProviderName(): Promise<ImageProviderName> {
+  const settings = getSettings()
+  const mode = settings.imageProvider
+  const k = openAiKey()
+  if ((mode === 'auto' || mode === 'openai') && k) return 'openai'
+  if (mode === 'openai') return 'mock'
+  if (mode === 'auto' || mode === 'sdcpp') {
+    if ((await engineStatus(userDataDir)).installed) return 'sdcpp'
+    if (mode === 'sdcpp') return 'mock'
+  }
+  if (mode === 'auto' || mode === 'local') {
+    if (await localImageAvailable(settings.localImageUrl)) return 'local'
+  }
+  return 'mock'
 }
 
 export async function pickImageProvider(): Promise<ImageProvider> {
@@ -41,8 +72,15 @@ export async function pickImageProvider(): Promise<ImageProvider> {
   const k = openAiKey()
   if ((mode === 'auto' || mode === 'openai') && k) return new OpenAiImageProvider(k.key)
   if (mode === 'openai') throw new Error('Has elegido OpenAI pero no hay clave de API de OpenAI en Ajustes.')
+  if (mode === 'auto' || mode === 'sdcpp') {
+    if ((await engineStatus(userDataDir)).installed) {
+      const port = await ensureEngine(userDataDir)
+      return new LocalImageProvider(`http://127.0.0.1:${port}`, engineParams, 'sdcpp')
+    }
+    if (mode === 'sdcpp') throw new Error('El motor de imágenes integrado no está instalado. Ve a Ajustes → Imágenes → Instalar motor local.')
+  }
   if (mode === 'auto' || mode === 'local') {
-    if (await localImageAvailable(settings.localImageUrl)) return new LocalImageProvider(settings.localImageUrl)
+    if (await localImageAvailable(settings.localImageUrl)) return new LocalImageProvider(settings.localImageUrl, externalParams, 'local')
     if (mode === 'local') throw new Error(`No hay un generador de imágenes local en ${settings.localImageUrl}. Abre Draw Things con «API Server» activado o Stable Diffusion WebUI.`)
   }
   return new MockImageProvider()

@@ -5,6 +5,7 @@ import type {
   AppSettings,
   Business,
   BusinessInput,
+  EngineInstallProgress,
   GenerateInput,
   ImageInput,
   KeyName,
@@ -31,6 +32,8 @@ export const CH = {
   mediaUpdate: 'media:update',
   contentGenerate: 'content:generate',
   imagesGenerate: 'images:generate',
+  imagesInstallEngine: 'images:installEngine',
+  imagesInstallProgress: 'images:installProgress',
   piecesList: 'pieces:list',
   piecesGet: 'pieces:get',
   piecesUpdate: 'pieces:update',
@@ -87,6 +90,9 @@ export interface Api {
   images: {
     /** Genera una imagen del producto/tema y la guarda en la biblioteca */
     generate(input: ImageInput): Promise<MediaItem>
+    /** Descarga el motor integrado (binario + modelos, ~9 GB); el progreso llega por onInstallProgress */
+    installEngine(): Promise<AiStatus>
+    onInstallProgress(cb: (p: EngineInstallProgress) => void): () => void
   }
   pieces: {
     list(): Promise<Piece[]>

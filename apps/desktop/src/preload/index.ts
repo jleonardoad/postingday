@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { OutputKind } from '@shared/formats'
 import { CH, type Api } from '@shared/ipc'
-import type { AppSettings, BusinessInput, GenerateInput, ImageInput, KeyName, MediaPatch, PiecePatch } from '@shared/types'
+import type { AppSettings, BusinessInput, EngineInstallProgress, GenerateInput, ImageInput, KeyName, MediaPatch, PiecePatch } from '@shared/types'
 
 const api: Api = {
   app: {
@@ -36,7 +36,13 @@ const api: Api = {
     generate: (input: GenerateInput) => ipcRenderer.invoke(CH.contentGenerate, input)
   },
   images: {
-    generate: (input: ImageInput) => ipcRenderer.invoke(CH.imagesGenerate, input)
+    generate: (input: ImageInput) => ipcRenderer.invoke(CH.imagesGenerate, input),
+    installEngine: () => ipcRenderer.invoke(CH.imagesInstallEngine),
+    onInstallProgress: (cb: (p: EngineInstallProgress) => void) => {
+      const listener = (_e: unknown, p: EngineInstallProgress): void => cb(p)
+      ipcRenderer.on(CH.imagesInstallProgress, listener)
+      return () => ipcRenderer.removeListener(CH.imagesInstallProgress, listener)
+    }
   },
   pieces: {
     list: () => ipcRenderer.invoke(CH.piecesList),

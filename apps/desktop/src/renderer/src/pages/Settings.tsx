@@ -1,5 +1,5 @@
 import { useEffect, useState, type JSX } from 'react'
-import { FolderOpen, KeyRound } from 'lucide-react'
+import { Download, FolderOpen, KeyRound, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import {
   IMAGE_PROVIDER_MODES,
@@ -21,6 +21,9 @@ export function Settings(): JSX.Element {
   const [paths, setPaths] = useState<AppPaths | null>(null)
   const [version, setVersion] = useState('')
   const [localUrl, setLocalUrl] = useState(settings.localImageUrl)
+  const installEngine = useStore((s) => s.installEngine)
+  const installingEngine = useStore((s) => s.installingEngine)
+  const engineProgress = useStore((s) => s.engineProgress)
 
   useEffect(() => {
     void window.api.app.paths().then(setPaths)
@@ -49,9 +52,11 @@ export function Settings(): JSX.Element {
     ? t('common.loading')
     : aiStatus.images.provider === 'openai'
       ? t('settings.ai.imageStatusOn', { model: aiStatus.images.model, source: source(aiStatus.images.keySource) })
-      : aiStatus.images.provider === 'local'
-        ? t('settings.ai.imageStatusLocal', { url: aiStatus.images.local.url })
-        : t('settings.ai.imageStatusMock')
+      : aiStatus.images.provider === 'sdcpp'
+        ? t('settings.ai.imageStatusEngine', { model: aiStatus.images.engine.model })
+        : aiStatus.images.provider === 'local'
+          ? t('settings.ai.imageStatusLocal', { url: aiStatus.images.local.url })
+          : t('settings.ai.imageStatusMock')
 
   return (
     <div>
@@ -129,6 +134,44 @@ export function Settings(): JSX.Element {
           {t('settings.ai.title')} · {t('settings.ai.imageTitle')}
         </h2>
         <p className="text-sm text-slate-700">{imageStatus}</p>
+
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="text-sm font-medium text-slate-900">{t('settings.ai.engineTitle', { model: aiStatus?.images.engine.model ?? 'Z-Image-Turbo' })}</div>
+              <div className="mt-0.5 text-xs text-slate-500">
+                {!aiStatus
+                  ? ''
+                  : !aiStatus.images.engine.supported
+                    ? t('settings.ai.engineUnsupported')
+                    : aiStatus.images.engine.installed
+                      ? aiStatus.images.engine.running
+                        ? t('settings.ai.engineRunning')
+                        : t('settings.ai.engineInstalled')
+                      : t('settings.ai.engineNotInstalled')}
+              </div>
+            </div>
+            {aiStatus?.images.engine.supported && !aiStatus.images.engine.installed && (
+              <button className="btn-primary shrink-0" disabled={installingEngine} onClick={() => void installEngine()}>
+                {installingEngine ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+                {installingEngine ? t('settings.ai.engineInstalling') : t('settings.ai.engineInstall')}
+              </button>
+            )}
+          </div>
+          {installingEngine && engineProgress && (
+            <div className="mt-3">
+              <div className="flex justify-between text-xs text-slate-500">
+                <span className="truncate font-mono">{engineProgress.step}</span>
+                <span>
+                  {(engineProgress.done / 1073741824).toFixed(2)} / {(engineProgress.total / 1073741824).toFixed(2)} GB
+                </span>
+              </div>
+              <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-200">
+                <div className="h-full bg-brand-600 transition-all" style={{ width: `${engineProgress.total ? Math.min(100, (engineProgress.done / engineProgress.total) * 100) : 0}%` }} />
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>

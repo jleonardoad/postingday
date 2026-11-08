@@ -230,9 +230,11 @@ function FormatDetail({
               <span className="text-xs text-slate-500">
                 {aiStatus?.images.provider === 'openai'
                   ? t('create.detail.imageAi', { model: aiStatus.images.model })
-                  : aiStatus?.images.provider === 'local'
-                    ? t('create.detail.imageLocal')
-                    : t('create.detail.imageMock')}
+                  : aiStatus?.images.provider === 'sdcpp'
+                    ? t('create.detail.imageEngine', { model: aiStatus.images.engine.model })
+                    : aiStatus?.images.provider === 'local'
+                      ? t('create.detail.imageLocal')
+                      : t('create.detail.imageMock')}
               </span>
             </div>
           </div>

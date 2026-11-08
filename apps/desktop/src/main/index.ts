@@ -3,6 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { app, BrowserWindow, shell } from 'electron'
 import { startCaptureServer } from './capture/server'
 import { closeDb, openDb } from './db'
+import { stopEngine } from './images/sdcpp'
 import { getBusiness } from './db/business'
 import { getSettings } from './db/settings'
 import { registerIpc } from './ipc'
@@ -134,4 +135,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 
-app.on('will-quit', () => closeDb())
+app.on('will-quit', () => {
+  stopEngine()
+  closeDb()
+})

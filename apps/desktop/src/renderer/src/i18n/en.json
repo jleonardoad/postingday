@@ -179,9 +179,10 @@
         "mock": "Example texts"
       },
       "imageModes": {
-        "auto": "Automatic (OpenAI if key, else local, else example)",
+        "auto": "Automatic (OpenAI if key, else built-in engine, else local server, else example)",
         "openai": "OpenAI (needs key)",
-        "local": "Local generator (Draw Things / Stable Diffusion)",
+        "sdcpp": "Built-in local engine (free)",
+        "local": "External local server (Draw Things / Stable Diffusion WebUI)",
         "mock": "Example card"
       },
       "statusOllama": "Texts by the local AI: Ollama, model {{model}}.",
@@ -193,7 +194,15 @@
       "imageStatusLocal": "Images from your local generator at {{url}}.",
       "localUrl": "Local generator address",
       "localOn": "Local generator detected.",
-      "localOff": "No local generator detected. Free on Mac: install Draw Things (App Store), download a model (e.g. FLUX.1 schnell) and enable “API Server” in its settings (port 7860)."
+      "localOff": "No local generator detected. Free on Mac: install Draw Things (App Store), download a model (e.g. FLUX.1 schnell) and enable “API Server” in its settings (port 7860).",
+      "imageStatusEngine": "Images by the built-in local engine ({{model}}), on your Mac and free.",
+      "engineTitle": "Built-in local engine: stable-diffusion.cpp + {{model}}",
+      "engineUnsupported": "Mac with Apple Silicon only for now.",
+      "engineNotInstalled": "Not installed. Downloads ~9 GB (binary and model, MIT and Apache licenses) into PostingDay's data folder. Can be paused and resumed.",
+      "engineInstalled": "Installed. Starts on its own when you generate the first image.",
+      "engineRunning": "Installed and running.",
+      "engineInstall": "Install local engine (9 GB)",
+      "engineInstalling": "Downloading…"
     }
   },
   "create": {
@@ -248,9 +257,10 @@
         "brand": "On your brand color"
       },
       "imageAi": "Images by OpenAI ({{model}}).",
-      "imageMock": "No image key: an example card is created. Add your OpenAI key in Settings for a real photo.",
+      "imageMock": "No image engine: an example card is created. Install the free local engine in Settings or add your OpenAI key.",
       "aiOllama": "Texts are written by the local AI ({{model}}), free and without leaving your Mac.",
-      "imageLocal": "Images from your local generator (Draw Things / Stable Diffusion)."
+      "imageLocal": "Images from your local generator (Draw Things / Stable Diffusion).",
+      "imageEngine": "Images by the built-in local engine ({{model}}), free and on your Mac. The first one takes ~1 min to warm up."
     }
   },
   "formats": {

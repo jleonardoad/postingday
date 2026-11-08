@@ -112,7 +112,7 @@ export const UI_LANGUAGES = ['es', 'en'] as const
 export type UiLanguage = (typeof UI_LANGUAGES)[number]
 
 export const TEXT_PROVIDER_MODES = ['auto', 'claude', 'ollama', 'mock'] as const
-export const IMAGE_PROVIDER_MODES = ['auto', 'openai', 'local', 'mock'] as const
+export const IMAGE_PROVIDER_MODES = ['auto', 'openai', 'sdcpp', 'local', 'mock'] as const
 
 export const settingsSchema = z.object({
   uiLanguage: z.enum(UI_LANGUAGES),
@@ -236,7 +236,7 @@ export const imageInputSchema = z.object({
 })
 export type ImageInput = z.infer<typeof imageInputSchema>
 
-export type ImageProviderName = 'mock' | 'openai' | 'local'
+export type ImageProviderName = 'mock' | 'openai' | 'local' | 'sdcpp'
 export type KeyName = 'anthropic' | 'openai'
 
 export const piecePatchSchema = z.object({
@@ -263,5 +263,13 @@ export interface AiStatus {
     keySource: 'env' | 'settings' | null
     model: string
     local: { available: boolean; url: string }
+    /** Motor integrado (stable-diffusion.cpp + Z-Image-Turbo) */
+    engine: { supported: boolean; installed: boolean; running: boolean; model: string; missing: string[] }
   }
+}
+
+export interface EngineInstallProgress {
+  step: string
+  done: number
+  total: number
 }
