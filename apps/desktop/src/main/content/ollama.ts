@@ -28,6 +28,16 @@ const JSON_SCHEMA = {
   required: ['kicker', 'headline', 'sub', 'cta', 'badge', 'labelA', 'labelB', 'caption', 'hashtags']
 }
 
+/** ¿Responde el servidor de Ollama? (aunque no tenga modelos) */
+export async function ollamaReachable(timeoutMs = 1500): Promise<boolean> {
+  try {
+    const res = await fetch(`${OLLAMA_URL}/api/version`, { signal: AbortSignal.timeout(timeoutMs) })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
 export async function ollamaModels(timeoutMs = 1500): Promise<string[]> {
   try {
     const res = await fetch(`${OLLAMA_URL}/api/tags`, { signal: AbortSignal.timeout(timeoutMs) })

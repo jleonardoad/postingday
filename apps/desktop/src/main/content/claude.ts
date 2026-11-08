@@ -96,6 +96,8 @@ export function buildUserPrompt(req: GenerateRequest): string {
     req.topic ? `This post is about: ${req.topic}. Make it the center of the copy.` : 'No specific topic: pick one of the star products or services.',
     req.mediaNotes.length ? `What the chosen photos show (owner's notes): ${req.mediaNotes.join(' | ')}` : 'No notes about the photos.',
     '',
+    'The quoted examples in the format description are illustrations in English only: write every field in the content language stated in the rules, never copy the English examples.',
+    `Language reminder: ${languageRule(req.language)}`,
     'Write the content now.'
   ]
   return lines.join('\n')
