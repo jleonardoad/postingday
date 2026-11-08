@@ -143,8 +143,14 @@ function FormatDetail({
   const max = Math.max(1, format.needs.photos)
   const [chosen, setChosen] = useState<number[]>([])
   const [ratio, setRatio] = useState<OutputKind>(format.preview)
-  const [topic, setTopic] = useState(() => business?.starProducts.split('\n').map((s) => s.trim()).find(Boolean) ?? '')
+  const [topic, setTopic] = useState('')
   const [imageStyle, setImageStyle] = useState<ImageStyle>('studio')
+
+  // Propone el producto estrella como tema en cuanto el negocio esté cargado (solo si el campo sigue vacío)
+  useEffect(() => {
+    const star = business?.starProducts.split('\n').map((s) => s.trim()).find(Boolean)
+    if (star) setTopic((cur) => cur || star)
+  }, [business])
 
   async function onGenerateImage(): Promise<void> {
     if (topic.trim().length < 2) return

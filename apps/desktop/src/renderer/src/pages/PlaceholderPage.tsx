@@ -34,27 +34,27 @@ export function PlaceholderPage({ topicB64, ratio }: { topicB64: string; ratio: 
         background: `linear-gradient(160deg, ${brand.primaryColor} 0%, ${brand.secondaryColor} 100%)`,
         color: '#fff',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        paddingTop: ratio === 'reel' ? 420 : 150
       }}
     >
+      {/* Arriba, para no chocar con los textos que la plantilla pone abajo */}
       <div
         style={{
-          width: w - 200,
+          width: w - 320,
           borderRadius: 48,
-          background: 'rgba(255,255,255,0.12)',
-          border: '2px solid rgba(255,255,255,0.25)',
-          padding: '96px 80px',
-          textAlign: 'center',
-          backdropFilter: 'blur(10px)'
+          background: 'rgba(255,255,255,0.10)',
+          border: '2px solid rgba(255,255,255,0.22)',
+          padding: '56px 60px',
+          textAlign: 'center'
         }}
       >
-        <Package size={220} strokeWidth={1.2} style={{ opacity: 0.9 }} />
-        <div style={{ fontSize: topic.length > 24 ? 72 : 96, fontWeight: 800, lineHeight: 1.05, letterSpacing: -2, marginTop: 40 }}>{topic}</div>
-        <div style={{ fontSize: 36, marginTop: 40, opacity: 0.8 }}>{brand.name}</div>
+        <Package size={150} strokeWidth={1.2} style={{ opacity: 0.85 }} />
+        <div style={{ fontSize: topic.length > 24 ? 52 : 64, fontWeight: 700, lineHeight: 1.1, letterSpacing: -1, marginTop: 24, opacity: 0.92 }}>{topic}</div>
       </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 56, textAlign: 'center', fontSize: 30, opacity: 0.7 }}>
-        Imagen de ejemplo · activa la IA de imágenes en Ajustes para una foto real
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 48, textAlign: 'center', fontSize: 28, opacity: 0.55, letterSpacing: 1 }}>
+        IMAGEN DE EJEMPLO · activa la IA de imágenes en Ajustes
       </div>
     </div>
   )
