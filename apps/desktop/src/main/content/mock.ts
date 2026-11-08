@@ -252,6 +252,7 @@ export class MockProvider implements TextProvider {
     const table = (lang === 'en' ? EN : ES)[req.format.id] ?? (lang === 'en' ? EN : ES).star_product
     const rnd = lcg(Date.now() ^ (req.format.id.length << 8))
     const product =
+      req.topic ||
       b.starProducts.split('\n').map((s) => s.trim()).find(Boolean) ||
       req.mediaNotes[0] ||
       (lang === 'en' ? 'our star product' : 'nuestro producto estrella')

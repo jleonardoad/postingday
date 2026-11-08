@@ -1,9 +1,10 @@
 import { FORMATS } from '@shared/formats'
-import type { AiStatus, GenerateInput, Piece } from '@shared/types'
+import type { AiStatus, GenerateInput, KeyName, Piece } from '@shared/types'
 import { getBusiness } from '../db/business'
 import { getMedia } from '../db/media'
 import { getPiece, insertPiece, replaceCopy } from '../db/pieces'
 import { getSecret, setSecret } from '../db/settings'
+import { imageStatus, OPENAI_SECRET } from '../images/generate'
 import { ClaudeProvider, CLAUDE_MODEL, describeClaudeError } from './claude'
 import { MockProvider } from './mock'
 import type { TextProvider } from './provider'
@@ -20,13 +21,18 @@ function apiKey(): { key: string; source: 'env' | 'settings' } | null {
 
 export function aiStatus(): AiStatus {
   const k = apiKey()
-  return { provider: k ? 'claude' : 'mock', hasKey: Boolean(k), keySource: k?.source ?? null, model: CLAUDE_MODEL }
+  return { provider: k ? 'claude' : 'mock', hasKey: Boolean(k), keySource: k?.source ?? null, model: CLAUDE_MODEL, images: imageStatus() }
 }
 
-export function setApiKey(key: string | null): AiStatus {
+export function setApiKey(name: KeyName, key: string | null): AiStatus {
   const clean = key?.trim() || null
-  if (clean && !/^sk-ant-/.test(clean)) throw new Error('La clave debe empezar por "sk-ant-".')
-  setSecret(SECRET_NAME, clean)
+  if (name === 'anthropic') {
+    if (clean && !/^sk-ant-/.test(clean)) throw new Error('La clave de Anthropic debe empezar por "sk-ant-".')
+    setSecret(SECRET_NAME, clean)
+  } else {
+    if (clean && !/^sk-/.test(clean)) throw new Error('La clave de OpenAI debe empezar por "sk-".')
+    setSecret(OPENAI_SECRET, clean)
+  }
   return aiStatus()
 }
 
@@ -45,7 +51,7 @@ export async function generatePiece(input: GenerateInput): Promise<Piece> {
   const provider = pickProvider()
   let copy
   try {
-    copy = await provider.generate({ business, format, ratio: input.ratio, language: business.language, mediaNotes })
+    copy = await provider.generate({ business, format, ratio: input.ratio, language: business.language, topic: input.topic ?? '', mediaNotes })
   } catch (err) {
     throw new Error(provider.name === 'claude' ? describeClaudeError(err) : (err as Error).message)
   }

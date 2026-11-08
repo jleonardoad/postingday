@@ -141,7 +141,8 @@
     "added": "Added",
     "noThumb": "No preview",
     "ffmpegMissing": "FFmpeg was not found: previews and video details won't be generated.",
-    "fromPhone": "Upload from phone"
+    "fromPhone": "Upload from phone",
+    "aiBadge": "AI"
   },
   "settings": {
     "title": "Settings",
@@ -162,7 +163,11 @@
       "keyHint": "Stored only on this computer. Get it at console.anthropic.com (not included in the Claude subscription).",
       "save": "Save key",
       "remove": "Remove key",
-      "saved": "Key saved. The next generation will use the AI."
+      "saved": "Key saved. The next generation will use the AI.",
+      "imageKeyLabel": "OpenAI API key (images)",
+      "imageKeyHint": "To generate product photos when you have no image. Get it at platform.openai.com.",
+      "imageStatusOn": "Images by OpenAI ({{model}}). Key from {{source}}.",
+      "imageStatusMock": "No image key: example cards are used instead of generated photos."
     }
   },
   "create": {
@@ -205,7 +210,19 @@
       "previewNote": "Example with your data. The final text is written by the AI.",
       "generating": "Generating…",
       "aiMock": "Trial mode: texts are examples. Add your Anthropic key in Settings so the AI writes them.",
-      "aiClaude": "Texts are written by Claude ({{model}})."
+      "aiClaude": "Texts are written by Claude ({{model}}).",
+      "topicTitle": "What is this post about?",
+      "topicPlaceholder": "E.g.: Phillips screwdriver, kids haircut, washable paint 1 gal",
+      "topicHint": "The texts will be about this. No photo? Generate an image with the button.",
+      "generateImage": "Generate image with AI",
+      "generatingImage": "Generating image…",
+      "imageStyles": {
+        "studio": "Studio shot",
+        "lifestyle": "In use",
+        "brand": "On your brand color"
+      },
+      "imageAi": "Images by OpenAI ({{model}}).",
+      "imageMock": "No image key: an example card is created. Add your OpenAI key in Settings for a real photo."
     }
   },
   "formats": {

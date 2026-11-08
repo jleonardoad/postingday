@@ -1,7 +1,7 @@
 import { useEffect, useState, type JSX } from 'react'
 import { FolderOpen, KeyRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { UI_LANGUAGES, type AppPaths, type UiLanguage } from '@shared/types'
+import { UI_LANGUAGES, type AppPaths, type KeyName, type UiLanguage } from '@shared/types'
 import { useStore } from '../store'
 
 export function Settings(): JSX.Element {
@@ -9,22 +9,15 @@ export function Settings(): JSX.Element {
   const settings = useStore((s) => s.settings)
   const updateSettings = useStore((s) => s.updateSettings)
   const aiStatus = useStore((s) => s.aiStatus)
-  const setAiKey = useStore((s) => s.setAiKey)
   const [paths, setPaths] = useState<AppPaths | null>(null)
   const [version, setVersion] = useState('')
-  const [key, setKey] = useState('')
-  const [keySaved, setKeySaved] = useState(false)
 
   useEffect(() => {
     void window.api.app.paths().then(setPaths)
     void window.api.app.version().then(setVersion)
   }, [])
 
-  async function saveKey(): Promise<void> {
-    await setAiKey(key.trim() || null)
-    setKey('')
-    setKeySaved(true)
-  }
+  const source = (s: 'env' | 'settings' | null): string => (s === 'env' ? t('settings.ai.sourceEnv') : t('settings.ai.sourceSettings'))
 
   return (
     <div>
@@ -45,40 +38,34 @@ export function Settings(): JSX.Element {
         </select>
       </section>
 
-      <section className="card mt-4">
+      <section className="card mt-4 space-y-6">
         <h2 className="text-sm font-medium tracking-wide text-slate-400 uppercase">{t('settings.ai.title')}</h2>
-        <p className="mt-2 text-sm text-slate-700">
-          {aiStatus?.provider === 'claude'
-            ? t('settings.ai.statusClaude', {
-                model: aiStatus.model,
-                source: aiStatus.keySource === 'env' ? t('settings.ai.sourceEnv') : t('settings.ai.sourceSettings')
-              })
-            : t('settings.ai.statusMock')}
-        </p>
-        <div className="mt-4">
-          <label className="field-label">{t('settings.ai.keyLabel')}</label>
-          <div className="flex gap-2">
-            <input
-              type="password"
-              className="field-input max-w-md font-mono"
-              placeholder="sk-ant-…"
-              value={key}
-              onChange={(e) => {
-                setKey(e.target.value)
-                setKeySaved(false)
-              }}
-            />
-            <button className="btn-primary" disabled={!key.trim()} onClick={() => void saveKey()}>
-              <KeyRound size={16} /> {t('settings.ai.save')}
-            </button>
-            {aiStatus?.keySource === 'settings' && (
-              <button className="btn-secondary" onClick={() => void setAiKey(null)}>
-                {t('settings.ai.remove')}
-              </button>
-            )}
-          </div>
-          <div className="field-hint">{keySaved ? t('settings.ai.saved') : t('settings.ai.keyHint')}</div>
-        </div>
+
+        <KeyField
+          name="anthropic"
+          label={t('settings.ai.keyLabel')}
+          hint={t('settings.ai.keyHint')}
+          placeholder="sk-ant-…"
+          status={
+            aiStatus?.provider === 'claude'
+              ? t('settings.ai.statusClaude', { model: aiStatus.model, source: source(aiStatus.keySource) })
+              : t('settings.ai.statusMock')
+          }
+          canRemove={aiStatus?.keySource === 'settings'}
+        />
+
+        <KeyField
+          name="openai"
+          label={t('settings.ai.imageKeyLabel')}
+          hint={t('settings.ai.imageKeyHint')}
+          placeholder="sk-…"
+          status={
+            aiStatus?.images.provider === 'openai'
+              ? t('settings.ai.imageStatusOn', { model: aiStatus.images.model, source: source(aiStatus.images.keySource) })
+              : t('settings.ai.imageStatusMock')
+          }
+          canRemove={aiStatus?.images.keySource === 'settings'}
+        />
       </section>
 
       <section className="card mt-4">
@@ -132,6 +119,61 @@ export function Settings(): JSX.Element {
       </section>
 
       <p className="mt-6 text-xs text-slate-400">{t('settings.version', { version })}</p>
+    </div>
+  )
+}
+
+function KeyField({
+  name,
+  label,
+  hint,
+  placeholder,
+  status,
+  canRemove
+}: {
+  name: KeyName
+  label: string
+  hint: string
+  placeholder: string
+  status: string
+  canRemove: boolean
+}): JSX.Element {
+  const { t } = useTranslation()
+  const setAiKey = useStore((s) => s.setAiKey)
+  const [key, setKey] = useState('')
+  const [saved, setSaved] = useState(false)
+
+  async function save(): Promise<void> {
+    await setAiKey(name, key.trim() || null)
+    setKey('')
+    setSaved(true)
+  }
+
+  return (
+    <div>
+      <p className="text-sm text-slate-700">{status}</p>
+      <label className="field-label mt-3">{label}</label>
+      <div className="flex gap-2">
+        <input
+          type="password"
+          className="field-input max-w-md font-mono"
+          placeholder={placeholder}
+          value={key}
+          onChange={(e) => {
+            setKey(e.target.value)
+            setSaved(false)
+          }}
+        />
+        <button className="btn-primary" disabled={!key.trim()} onClick={() => void save()}>
+          <KeyRound size={16} /> {t('settings.ai.save')}
+        </button>
+        {canRemove && (
+          <button className="btn-secondary" onClick={() => void setAiKey(name, null)}>
+            {t('settings.ai.remove')}
+          </button>
+        )}
+      </div>
+      <div className="field-hint">{saved ? t('settings.ai.saved') : hint}</div>
     </div>
   )
 }

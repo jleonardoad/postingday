@@ -206,10 +206,27 @@ export const generateInputSchema = z.object({
   formatId: z.string().min(1),
   mediaIds: z.array(z.number().int().positive()).max(4),
   ratio: z.enum(['post', 'reel']),
+  /** De qué trata la publicación (producto, servicio, tema). Si falta, se usa el producto estrella */
+  topic: z.string().trim().max(200).optional(),
   /** Si se indica, se reescriben los textos de esa pieza en vez de crear una nueva */
   pieceId: z.number().int().positive().optional()
 })
 export type GenerateInput = z.infer<typeof generateInputSchema>
+
+// ---------- Imágenes generadas ----------
+
+export const IMAGE_STYLES = ['studio', 'lifestyle', 'brand'] as const
+export type ImageStyle = (typeof IMAGE_STYLES)[number]
+
+export const imageInputSchema = z.object({
+  topic: z.string().trim().min(2).max(200),
+  style: z.enum(IMAGE_STYLES).default('studio'),
+  ratio: z.enum(['post', 'reel']).default('post')
+})
+export type ImageInput = z.infer<typeof imageInputSchema>
+
+export type ImageProviderName = 'mock' | 'openai'
+export type KeyName = 'anthropic' | 'openai'
 
 export const piecePatchSchema = z.object({
   texts: pieceTextsSchema.optional(),
@@ -222,8 +239,16 @@ export const piecePatchSchema = z.object({
 export type PiecePatch = z.infer<typeof piecePatchSchema>
 
 export interface AiStatus {
+  /** Textos */
   provider: ProviderName
   hasKey: boolean
   keySource: 'env' | 'settings' | null
   model: string
+  /** Imágenes */
+  images: {
+    provider: ImageProviderName
+    hasKey: boolean
+    keySource: 'env' | 'settings' | null
+    model: string
+  }
 }

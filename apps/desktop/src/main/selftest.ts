@@ -18,6 +18,7 @@ import { getBusiness, saveBusiness } from './db/business'
 import { listMedia, updateMedia } from './db/media'
 import { listPieces, updatePiece } from './db/pieces'
 import { getSettings } from './db/settings'
+import { generateImage } from './images/generate'
 import { resolveBinaries } from './media/ffmpeg'
 import { importFile, type MediaDirs } from './media/import'
 import { exportPiece } from './render/export'
@@ -91,6 +92,34 @@ export async function runSelfTest(dirs: MediaDirs, exportsDir: string, userData:
     log('generate ERROR:', (err as Error).message)
   }
 
+  // E2E de un producto sin foto: PD_SELFTEST_TOPIC="destornillador de estría"
+  const topic = process.env.PD_SELFTEST_TOPIC
+  if (topic) {
+    try {
+      const t0 = Date.now()
+      const img = await generateImage({ topic, style: 'studio', ratio: 'post' }, dirs)
+      log('imagen ok:', img.originalName, `${img.width}x${img.height}`, img.tags.join(','), `en ${((Date.now() - t0) / 1000).toFixed(1)} s`)
+      const p = await generatePiece({ formatId: 'star_product', mediaIds: [img.id], ratio: 'post', topic })
+      log('pieza ok:', p.provider, '|', p.texts.kicker, '|', p.texts.headline, '|', p.texts.sub, '|', p.texts.cta)
+      log('caption:', p.caption)
+      log('hashtags:', p.hashtags.join(' '))
+      const png = await exportPiece(p.id, 'post', exportsDir, dirs, userData)
+      log('post png:', png)
+      const mp4 = await exportPiece(p.id, 'reel', exportsDir, dirs, userData)
+      log('reel mp4:', mp4)
+      const { ffmpeg } = await resolveBinaries()
+      if (ffmpeg) {
+        for (const sec of [1, 6, 11]) {
+          const frame = mp4.replace(/\.mp4$/, `-f${sec}.jpg`)
+          await execFileP(ffmpeg, ['-y', '-v', 'error', '-ss', String(sec), '-i', mp4, '-frames:v', '1', '-q:v', '3', frame])
+          log('  fotograma', sec, 's →', frame)
+        }
+      }
+    } catch (err) {
+      log('topic ERROR:', (err as Error).message)
+    }
+  }
+
   // Reels: uno con foto (Ken Burns) y otro con clip; se extraen fotogramas para revisarlos
   if (process.env.PD_SELFTEST_REEL) {
     const videos = all.filter((m) => m.kind === 'video')
@@ -161,6 +190,7 @@ export async function runSelfTest(dirs: MediaDirs, exportsDir: string, userData:
         format,
         ratio: 'post',
         language: 'es',
+        topic: '',
         mediaNotes: ['sartén cerámica sobre encimera']
       })
       log('claude ok:', copy.texts.headline, '|', copy.caption.slice(0, 80))

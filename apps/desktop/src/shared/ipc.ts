@@ -6,6 +6,8 @@ import type {
   Business,
   BusinessInput,
   GenerateInput,
+  ImageInput,
+  KeyName,
   MediaItem,
   MediaPatch,
   Piece,
@@ -28,6 +30,7 @@ export const CH = {
   mediaRemove: 'media:remove',
   mediaUpdate: 'media:update',
   contentGenerate: 'content:generate',
+  imagesGenerate: 'images:generate',
   piecesList: 'pieces:list',
   piecesGet: 'pieces:get',
   piecesUpdate: 'pieces:update',
@@ -81,6 +84,10 @@ export interface Api {
   content: {
     generate(input: GenerateInput): Promise<Piece>
   }
+  images: {
+    /** Genera una imagen del producto/tema y la guarda en la biblioteca */
+    generate(input: ImageInput): Promise<MediaItem>
+  }
   pieces: {
     list(): Promise<Piece[]>
     get(id: number): Promise<Piece | null>
@@ -93,7 +100,7 @@ export interface Api {
   }
   ai: {
     status(): Promise<AiStatus>
-    setKey(key: string | null): Promise<AiStatus>
+    setKey(name: KeyName, key: string | null): Promise<AiStatus>
   }
   render: {
     ready(): void

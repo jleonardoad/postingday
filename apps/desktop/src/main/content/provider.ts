@@ -6,6 +6,8 @@ export interface GenerateRequest {
   format: ContentFormat
   ratio: OutputKind
   language: ContentLanguage
+  /** De qué trata la publicación (producto, servicio, tema). Vacío = producto estrella */
+  topic: string
   /** Notas y etiquetas de las fotos elegidas, para que el texto hable de lo que se ve */
   mediaNotes: string[]
 }

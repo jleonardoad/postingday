@@ -106,8 +106,9 @@ export function Library(): JSX.Element {
                       {t('library.noThumb')}
                     </div>
                   )}
-                  <div className="absolute top-2 left-2 rounded bg-black/60 p-1 text-white">
+                  <div className="absolute top-2 left-2 flex items-center gap-1 rounded bg-black/60 p-1 text-white">
                     {item.kind === 'video' ? <Film size={14} /> : <ImageIcon size={14} />}
+                    {item.tags.includes('ia') && <span className="pr-0.5 text-[10px] font-semibold tracking-wide uppercase">{t('library.aiBadge')}</span>}
                   </div>
                   {item.kind === 'video' && item.durationMs !== null && (
                     <div className="absolute right-2 bottom-2 rounded bg-black/60 px-1.5 py-0.5 text-[11px] text-white">

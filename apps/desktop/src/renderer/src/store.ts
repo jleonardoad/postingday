@@ -6,6 +6,8 @@ import type {
   Business,
   BusinessInput,
   GenerateInput,
+  ImageInput,
+  KeyName,
   MediaItem,
   MediaPatch,
   Piece,
@@ -30,6 +32,7 @@ interface State {
   aiStatus: AiStatus | null
   importing: boolean
   generating: boolean
+  generatingImage: boolean
   exporting: boolean
   error: string | null
 
@@ -49,7 +52,8 @@ interface State {
   updatePiece: (id: number, patch: PiecePatch) => Promise<void>
   removePiece: (id: number) => Promise<void>
   exportPiece: (id: number, ratio: OutputKind) => Promise<string | null>
-  setAiKey: (key: string | null) => Promise<void>
+  setAiKey: (name: KeyName, key: string | null) => Promise<void>
+  generateImage: (input: ImageInput) => Promise<MediaItem | null>
 }
 
 function message(err: unknown): string {
@@ -76,6 +80,7 @@ export const useStore = create<State>((set, get) => ({
   aiStatus: null,
   importing: false,
   generating: false,
+  generatingImage: false,
   exporting: false,
   error: null,
 
@@ -216,11 +221,25 @@ export const useStore = create<State>((set, get) => ({
     }
   },
 
-  setAiKey: async (key) => {
+  setAiKey: async (name, key) => {
     try {
-      set({ aiStatus: await window.api.ai.setKey(key), error: null })
+      set({ aiStatus: await window.api.ai.setKey(name, key), error: null })
     } catch (err) {
       set({ error: message(err) })
+    }
+  },
+
+  generateImage: async (input) => {
+    set({ generatingImage: true, error: null })
+    try {
+      const item = await window.api.images.generate(input)
+      set({ media: [item, ...get().media.filter((m) => m.id !== item.id)] })
+      return item
+    } catch (err) {
+      set({ error: message(err) })
+      return null
+    } finally {
+      set({ generatingImage: false })
     }
   }
 }))

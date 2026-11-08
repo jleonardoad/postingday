@@ -4,6 +4,7 @@ import { CH } from '@shared/ipc'
 import {
   businessSchema,
   generateInputSchema,
+  imageInputSchema,
   mediaPatchSchema,
   piecePatchSchema,
   settingsSchema,
@@ -15,6 +16,7 @@ import { getBusiness, saveBusiness } from './db/business'
 import { listMedia, updateMedia } from './db/media'
 import { deletePiece, getPiece, listPieces, updatePiece } from './db/pieces'
 import { getSettings, setSettings } from './db/settings'
+import { generateImage } from './images/generate'
 import { resolveBinaries } from './media/ffmpeg'
 import { importFromDialog, removeMedia, type MediaDirs } from './media/import'
 import { exportPiece, scriptFor } from './render/export'
@@ -68,6 +70,7 @@ export function registerIpc(ctx: IpcContext): void {
   )
 
   ipcMain.handle(CH.contentGenerate, (_e, input: unknown) => generatePiece(generateInputSchema.parse(input)))
+  ipcMain.handle(CH.imagesGenerate, (_e, input: unknown) => generateImage(imageInputSchema.parse(input), ctx.dirs))
 
   ipcMain.handle(CH.piecesList, () => listPieces())
   ipcMain.handle(CH.piecesGet, (_e, id: unknown) => getPiece(idSchema.parse(id)))
@@ -83,7 +86,9 @@ export function registerIpc(ctx: IpcContext): void {
   ipcMain.handle(CH.piecesScript, (_e, id: unknown) => scriptFor(idSchema.parse(id), ctx.paths.userData))
 
   ipcMain.handle(CH.aiStatus, () => aiStatus())
-  ipcMain.handle(CH.aiSetKey, (_e, key: unknown) => setApiKey(z.string().nullable().parse(key)))
+  ipcMain.handle(CH.aiSetKey, (_e, name: unknown, key: unknown) =>
+    setApiKey(z.enum(['anthropic', 'openai']).parse(name), z.string().nullable().parse(key))
+  )
 
   ipcMain.handle(CH.captureStart, () =>
     startCaptureServer({

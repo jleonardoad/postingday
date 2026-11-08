@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type JSX } from 'react'
 import { ArrowLeft, Check, Film, ImageIcon, Loader2, Sparkles } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { FORMATS, type ContentFormat, type OutputKind } from '@shared/formats'
-import type { MediaItem } from '@shared/types'
+import { IMAGE_STYLES, type ImageStyle, type MediaItem } from '@shared/types'
 import { brandFromBusiness } from '../templates/brand'
 import { TemplatePreview, type Brand, type PreviewTexts } from '../templates/TemplatePreview'
 import { useStore } from '../store'
@@ -135,11 +135,22 @@ function FormatDetail({
   const { t } = useTranslation()
   const generate = useStore((s) => s.generate)
   const generating = useStore((s) => s.generating)
+  const generateImage = useStore((s) => s.generateImage)
+  const generatingImage = useStore((s) => s.generatingImage)
   const openPiece = useStore((s) => s.openPiece)
   const aiStatus = useStore((s) => s.aiStatus)
+  const business = useStore((s) => s.business)
   const max = Math.max(1, format.needs.photos)
   const [chosen, setChosen] = useState<number[]>([])
   const [ratio, setRatio] = useState<OutputKind>(format.preview)
+  const [topic, setTopic] = useState(() => business?.starProducts.split('\n').map((s) => s.trim()).find(Boolean) ?? '')
+  const [imageStyle, setImageStyle] = useState<ImageStyle>('studio')
+
+  async function onGenerateImage(): Promise<void> {
+    if (topic.trim().length < 2) return
+    const item = await generateImage({ topic: topic.trim(), style: imageStyle, ratio })
+    if (item) setChosen((c) => [item.id, ...c].slice(0, max))
+  }
 
   // Preselecciona las primeras fotos en cuanto la biblioteca esté cargada
   useEffect(() => {
@@ -160,7 +171,7 @@ function FormatDetail({
   }
 
   async function onGenerate(): Promise<void> {
-    const piece = await generate({ formatId: format.id, mediaIds: chosen, ratio })
+    const piece = await generate({ formatId: format.id, mediaIds: chosen, ratio, topic: topic.trim() || undefined })
     if (piece) openPiece(piece.id)
   }
 
@@ -190,6 +201,33 @@ function FormatDetail({
           </div>
 
           <div className="card mt-4">
+            <h2 className="text-sm font-medium tracking-wide text-slate-400 uppercase">{t('create.detail.topicTitle')}</h2>
+            <input
+              className="field-input mt-2"
+              placeholder={t('create.detail.topicPlaceholder')}
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+            />
+            <div className="field-hint">{t('create.detail.topicHint')}</div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <select className="field-input w-auto" value={imageStyle} onChange={(e) => setImageStyle(e.target.value as ImageStyle)}>
+                {IMAGE_STYLES.map((s) => (
+                  <option key={s} value={s}>
+                    {t(`create.detail.imageStyles.${s}`)}
+                  </option>
+                ))}
+              </select>
+              <button className="btn-secondary" disabled={generatingImage || topic.trim().length < 2} onClick={() => void onGenerateImage()}>
+                {generatingImage ? <Loader2 size={16} className="animate-spin" /> : <ImageIcon size={16} />}
+                {generatingImage ? t('create.detail.generatingImage') : t('create.detail.generateImage')}
+              </button>
+              <span className="text-xs text-slate-500">
+                {aiStatus?.images.provider === 'openai' ? t('create.detail.imageAi', { model: aiStatus.images.model }) : t('create.detail.imageMock')}
+              </span>
+            </div>
+          </div>
+
+          <div className="card mt-4">
             <h2 className="text-sm font-medium tracking-wide text-slate-400 uppercase">
               {t('create.detail.choosePhotos', { count: max })}
             </h2>
@@ -209,6 +247,11 @@ function FormatDetail({
                       ].join(' ')}
                     >
                       <img src={m.thumbUrl ?? m.url} alt="" className="h-full w-full object-cover" />
+                      {m.tags.includes('ia') && (
+                        <span className="absolute bottom-1 left-1 rounded bg-black/60 px-1 text-[9px] font-semibold tracking-wide text-white uppercase">
+                          {t('library.aiBadge')}
+                        </span>
+                      )}
                       {idx >= 0 && (
                         <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-[11px] font-semibold text-white">
                           {max > 1 ? idx + 1 : <Check size={12} />}

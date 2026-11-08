@@ -141,7 +141,8 @@
     "added": "Añadido",
     "noThumb": "Sin vista previa",
     "ffmpegMissing": "No se encontró FFmpeg: las vistas previas y los datos de vídeo no se generarán.",
-    "fromPhone": "Subir desde el celular"
+    "fromPhone": "Subir desde el celular",
+    "aiBadge": "IA"
   },
   "settings": {
     "title": "Ajustes",
@@ -162,7 +163,11 @@
       "keyHint": "Se guarda solo en este ordenador. Consíguela en console.anthropic.com (no la incluye la suscripción de Claude).",
       "save": "Guardar clave",
       "remove": "Quitar clave",
-      "saved": "Clave guardada. La próxima generación usará la IA."
+      "saved": "Clave guardada. La próxima generación usará la IA.",
+      "imageKeyLabel": "Clave de API de OpenAI (imágenes)",
+      "imageKeyHint": "Para generar fotos de producto cuando no tienes imagen. Consíguela en platform.openai.com.",
+      "imageStatusOn": "Imágenes con OpenAI ({{model}}). Clave tomada de {{source}}.",
+      "imageStatusMock": "Sin clave de imágenes: se usan tarjetas de ejemplo en lugar de fotos generadas."
     }
   },
   "create": {
@@ -205,7 +210,19 @@
       "previewNote": "Ejemplo con tus datos. El texto definitivo lo escribe la IA.",
       "generating": "Generando…",
       "aiMock": "Modo prueba: los textos son de ejemplo. Añade tu clave de Anthropic en Ajustes para que los escriba la IA.",
-      "aiClaude": "Los textos los escribe Claude ({{model}})."
+      "aiClaude": "Los textos los escribe Claude ({{model}}).",
+      "topicTitle": "¿Sobre qué es esta publicación?",
+      "topicPlaceholder": "Ej.: destornillador de estría, corte de cabello para niños, pintura lavable 4L",
+      "topicHint": "Los textos hablarán de esto. Si no tienes foto, genera una imagen con el botón.",
+      "generateImage": "Generar imagen con IA",
+      "generatingImage": "Generando imagen…",
+      "imageStyles": {
+        "studio": "Foto de estudio",
+        "lifestyle": "En uso",
+        "brand": "Con tu color de marca"
+      },
+      "imageAi": "Imágenes con OpenAI ({{model}}).",
+      "imageMock": "Sin clave de imágenes: se crea una tarjeta de ejemplo. Añade tu clave de OpenAI en Ajustes para una foto real."
     }
   },
   "formats": {

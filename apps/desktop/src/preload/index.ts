@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { OutputKind } from '@shared/formats'
 import { CH, type Api } from '@shared/ipc'
-import type { AppSettings, BusinessInput, GenerateInput, MediaPatch, PiecePatch } from '@shared/types'
+import type { AppSettings, BusinessInput, GenerateInput, ImageInput, KeyName, MediaPatch, PiecePatch } from '@shared/types'
 
 const api: Api = {
   app: {
@@ -35,6 +35,9 @@ const api: Api = {
   content: {
     generate: (input: GenerateInput) => ipcRenderer.invoke(CH.contentGenerate, input)
   },
+  images: {
+    generate: (input: ImageInput) => ipcRenderer.invoke(CH.imagesGenerate, input)
+  },
   pieces: {
     list: () => ipcRenderer.invoke(CH.piecesList),
     get: (id: number) => ipcRenderer.invoke(CH.piecesGet, id),
@@ -45,7 +48,7 @@ const api: Api = {
   },
   ai: {
     status: () => ipcRenderer.invoke(CH.aiStatus),
-    setKey: (key: string | null) => ipcRenderer.invoke(CH.aiSetKey, key)
+    setKey: (name: KeyName, key: string | null) => ipcRenderer.invoke(CH.aiSetKey, name, key)
   },
   render: {
     ready: () => ipcRenderer.send(CH.renderReady)

@@ -93,6 +93,7 @@ export function buildUserPrompt(req: GenerateRequest): string {
     req.format.brief,
     `Output shape: ${req.ratio === 'reel' ? 'vertical reel cover (9:16)' : 'square post (1:1)'}.`,
     `Fields used by this template: ${fields.join(', ')}. Return empty strings for the others.`,
+    req.topic ? `This post is about: ${req.topic}. Make it the center of the copy.` : 'No specific topic: pick one of the star products or services.',
     req.mediaNotes.length ? `What the chosen photos show (owner's notes): ${req.mediaNotes.join(' | ')}` : 'No notes about the photos.',
     '',
     'Write the content now.'
