@@ -59,6 +59,8 @@ PD_SELFTEST=1 PD_SELFTEST_TOPIC="destornillador de estría" PD_SCREENSHOT=/tmp/p
 
 ## 4. Dónde están los datos y los motores (esta máquina)
 
+> Instalación desde cero en otra máquina, modelos con URL/tamaño/licencia y migración de datos y modelos: [`INSTALACION.md`](./INSTALACION.md).
+
 `~/Library/Application Support/PostingDay/`
 
 | Carpeta / archivo | Contenido |

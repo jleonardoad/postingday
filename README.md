@@ -3,6 +3,7 @@
 Contenido para las redes de pymes, creado con IA y publicado solo. Monorepo con pnpm.
 
 **Para retomar el trabajo:** lee [`docs/CHECKLIST.md`](docs/CHECKLIST.md) (estado, cómo probar, hallazgos, pendientes) y [`docs/plan.md`](docs/plan.md) (plan de producto).
+**Para instalar en otra máquina** (requisitos, modelos de IA, migración de datos y modelos, Windows): [`docs/INSTALACION.md`](docs/INSTALACION.md).
 
 ```
 apps/desktop   App de escritorio (Electron + React + TypeScript)
